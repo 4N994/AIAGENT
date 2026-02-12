@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="id" oncontextmenu="return false;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIAGENT | THE TOTAL TERMINAL v4.0</title>
+    <meta name="google-site-verification" content="fC_7NZk0K71MhNxFMv-DFJuS2ulaYdWqPHZ340IhC_Q" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
         body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
         .container { max-width: 900px; margin: 20px auto; border: 1px solid #3b82f6; background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 25px; box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); backdrop-filter: blur(15px); }
         .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #3b82f6; margin-bottom: 15px; }
-        h1 { color: #3b82f6; letter-spacing: 3px; margin: 0; }
+        h1 { color: #3b82f6; letter-spacing: 3px; margin: 0; font-weight: bold; }
         .status { color: #10b981; font-weight: bold; font-size: 0.8em; margin-bottom: 20px; }
 
         /* TAB SYSTEM */
@@ -28,6 +29,7 @@
         .btn-pay { background: linear-gradient(45deg, #2563eb, #3b82f6); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; }
 
         #whale-content { display: none; margin-top: 30px; border-top: 2px solid #3b82f6; padding-top: 20px; text-align: left; }
+        .secret-card { background: #0f172a; padding: 20px; border-radius: 15px; border-left: 5px solid #10b981; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -42,11 +44,10 @@
                 <button class="tab-btn active" onclick="changeChart('BINANCE:BTCUSDT', this)">KRIPTO</button>
                 <button class="tab-btn" onclick="changeChart('OANDA:XAUUSD', this)">LOGAM MULIA</button>
                 <button class="tab-btn" onclick="changeChart('IDX:BBCA', this)">SAHAM (BBCA)</button>
-                <button class="tab-btn" onclick="changeChart('TVC:US10Y', this)">OBLIGASI (10Y)</button>
+                <button class="tab-btn" onclick="changeChart('TVC:ID10Y', this)">OBLIGASI (10Y)</button>
             </div>
 
-            <div class="widget-section" id="chart-container">
-                </div>
+            <div class="widget-section" id="chart-container"></div>
 
             <div class="betting-grid">
                 <div class="bet-card"><input type="text" class="bet-input" placeholder="BTC Target"></div>
@@ -56,22 +57,30 @@
 
             <div class="payment-box" onclick="copyAddress()">
                 <p style="color:#3b82f6; font-weight:bold; margin:0;">CLAIM WHALE ACCESS: 5 USDT</p>
-                <code style="color: #f0b90b; font-size: 0.8em;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                <code id="wallet-addr" style="color: #f0b90b; font-size: 0.8em;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                <p style="font-size: 10px; color: #64748b; margin-top: 5px;">(Klik untuk salin alamat Polygon)</p>
             </div>
             <button onclick="payWithWeb3()" class="btn-pay" id="pay-btn">VERIFIKASI IDENTITAS</button>
         </div>
 
         <div id="whale-content">
-            <h2 style="color: #10b981;">🔓 STRATEGI KEJAYAAN RAKYAT</h2>
-            <p>1. 80-90% Modal: Saham Blue Chip & BTC (DCA)</p>
-            <p>2. 10-20% Modal: Bajing Loncat Altcoins</p>
-            <p>3. Exit Plan: Aset Nyata, Obligasi & Ternak [cite: 2026-01-20]</p>
+            <h2 style="color: #10b981; text-align: center;">🔓 STRATEGI KEJAYAAN RAKYAT</h2>
+            <div class="secret-card">
+                <p><strong>1. Inti Portofolio (80-90%):</strong> Fokus pada Saham Blue Chip & BTC. Akumulasi cicilan (DCA) untuk dividen dan pertumbuhan stabil.</p>
+            </div>
+            <div class="secret-card">
+                <p><strong>2. Percepatan (10-20%):</strong> Strategi "Bajing Loncat" pada Altcoins/Saham lapis kedua untuk profit cepat. Keuntungan balik ke modal inti.</p>
+            </div>
+            <div class="secret-card">
+                <p><strong>3. Exit Plan:</strong> Konversi profit ke Aset Nyata, Obligasi, dan Ternak untuk masa depan. [cite: 2026-01-20]</p>
+            </div>
+            <p style="text-align: center; font-size: 12px; color: #64748b; margin-top: 20px;">"This is the time for the people to party" - The Next Satoshi</p>
         </div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // FUNGSI GANTI GRAFIK OTOMATIS
+        // FUNGSI GANTI GRAFIK
         function loadChart(symbol) {
             new TradingView.widget({
                 "autosize": true,
@@ -82,7 +91,7 @@
                 "locale": "id",
                 "enable_publishing": false,
                 "hide_side_toolbar": false,
-                "allow_symbol_change": true // Whale bisa cari coin/saham apapun di sini!
+                "allow_symbol_change": true
             });
         }
 
@@ -93,7 +102,7 @@
             btn.classList.add('active');
         }
 
-        // Load Default (BTC)
+        // Load Default
         loadChart('BINANCE:BTCUSDT');
 
         // WEB3 & PAYMENT
@@ -102,22 +111,32 @@
                 try {
                     const provider = new ethers.providers.Web3Provider(window.ethereum);
                     await provider.send("eth_requestAccounts", []);
-                    document.getElementById('pay-btn').innerText = "VERIFIKASI...";
+                    document.getElementById('pay-btn').innerText = "MENUNGGU VERIFIKASI...";
+                    
+                    // Simulasi Verifikasi (Whale harus sudah kirim 5 USDT manual)
                     setTimeout(() => {
                         document.getElementById('public-view').style.display = 'none';
                         document.getElementById('whale-content').style.display = 'block';
+                        window.scrollTo(0,0);
                     }, 3000);
-                } catch (e) { alert("Gagal!"); }
-            } else { alert("Gunakan Trust Wallet!"); }
+                } catch (e) { alert("Koneksi Dompet Dibatalkan"); }
+            } else { 
+                alert("Dompet Web3 tidak terdeteksi. Silakan kirim 5 USDT secara manual ke alamat yang tertera lalu klik Verifikasi kembali."); 
+            }
         }
 
         function copyAddress() {
-            navigator.clipboard.writeText("0xf62F4b6EAbc088A7263139E46878b12C097e6884");
-            alert("Alamat AIAGENT Disalin!");
+            const addr = "0xf62f4b6eabc088a7263139e46878b12cb15ed86f";
+            navigator.clipboard.writeText(addr);
+            alert("Alamat Dompet Disalin: " + addr);
         }
+
+        // Lock on Refresh
+        window.onbeforeunload = function() { return "Akses terbatas akan terkunci kembali."; };
     </script>
 
-    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js" defer></script>
-    <script src="https://files.bpcontent.cloud/2026/02/11/14/20260211140309-64ADM621.js" defer></script>
+    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
+    <script src="https://files.bpcontent.cloud/2025/02/10/06/20250210065039-4QG914O6.js"></script>
 </body>
 </html>
+        
