@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="id" oncontextmenu="return false;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIAGENT | CYBER PORTAL</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <style>
+        /* CYBER-NEON THEME - AIAGENT EDITION */
+        * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+        body { 
+            background: #020617; color: #e2e8f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 15px; text-align: center;
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #020617 100%);
+        }
+        .container { 
+            max-width: 600px; margin: 20px auto; padding: 25px;
+            background: rgba(15, 23, 42, 0.8); border: 1px solid #3b82f6;
+            border-radius: 20px; box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        .cyber-logo { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #3b82f6; box-shadow: 0 0 15px #3b82f6; margin-bottom: 10px; }
+        h1 { color: #3b82f6; text-transform: uppercase; letter-spacing: 3px; font-size: 1.4rem; margin: 10px 0; }
+        .status-line { color: #10b981; font-size: 0.75rem; font-weight: bold; margin-bottom: 20px; text-shadow: 0 0 5px #10b981; }
+
+        /* POLYMARKET STYLE */
+        .market-card {
+            background: #1e293b; border: 1px solid #334155; border-radius: 12px;
+            padding: 15px; margin: 15px 0; text-align: left;
+        }
+        .market-title { font-weight: bold; font-size: 1rem; color: #f8fafc; display: block; margin-bottom: 8px; }
+        .prob-container { background: #0f172a; height: 10px; border-radius: 5px; margin: 10px 0; overflow: hidden; }
+        .prob-bar { background: linear-gradient(90deg, #3b82f6, #60a5fa); height: 100%; border-radius: 5px; }
+        .market-stats { display: flex; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; }
+
+        /* PAYMENT & WIDGET */
+        .widget-box { border-radius: 12px; overflow: hidden; border: 1px solid #334155; margin: 20px 0; height: 250px; }
+        .payment-zone { 
+            border: 2px dashed #3b82f6; border-radius: 12px; padding: 20px; 
+            margin: 20px 0; background: rgba(59, 130, 246, 0.05); cursor: pointer;
+        }
+        .btn-cyber {
+            background: #3b82f6; color: white; border: none; width: 100%;
+            padding: 15px; border-radius: 10px; font-weight: bold; font-size: 1rem;
+            cursor: pointer; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        /* HIDDEN AREA */
+        #whale-content { display: none; padding-top: 20px; border-top: 2px solid #3b82f6; margin-top: 20px; }
+        .secret-item { background: rgba(16, 185, 129, 0.1); border-left: 4px solid #10b981; padding: 10px; margin: 10px 0; text-align: left; }
+    </style>
+</head>
+<body onkeydown="return false;">
+
+    <div class="container">
+        <img src="logo.png" alt="AI Agent" class="cyber-logo">
+        <h1>AIAGENT HUB</h1>
+        <p class="status-line" id="sys-status">● PORTAL TERENKRIPSI: VERIFIKASI WHALE</p>
+
+        <div id="public-view">
+            <div class="market-card">
+                <span class="market-title">Bitcoin Tembus $150k Sebelum 2027?</span>
+                <div class="prob-container"><div class="prob-bar" style="width: 78%;"></div></div>
+                <div class="market-stats"><span>Probability: 78%</span><span style="color:#10b981;">Outlook: Bullish</span></div>
+            </div>
+
+            <div class="widget-box">
+                <div id="chart" style="height: 100%;"></div>
+                <script src="https://s3.tradingview.com/tv.js"></script>
+                <script>
+                    new TradingView.widget({"autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "D", "theme": "dark", "container_id": "chart", "locale": "id"});
+                </script>
+            </div>
+
+            <div class="payment-zone" onclick="copyWallet()">
+                <p style="margin-top:0; font-weight:bold; color:#3b82f6;">BUKA STRATEGI AIAGENT</p>
+                <code id="wallet-addr" style="font-size: 0.75rem; color:#f0b90b;">0xf62F4b6EAbc088A7263139E46878b12C097e6884</code>
+                <p id="copy-msg" style="display:none; color:#10b981; font-size:0.7rem; margin:5px 0 0 0;">✅ Alamat Disalin!</p>
+            </div>
+
+            <button class="btn-cyber" onclick="processPayment()" id="pay-btn">BAYAR 5 USDT UNTUK AKSES</button>
+        </div>
+
+        <div id="whale-content">
+            <h2 style="color:#10b981;">🔓 AKSES DIBUKA</h2>
+            <div class="secret-item">
+                <strong>Strategi Utama:</strong> Tinggalkan kripto bertahap, beli Aset Nyata, Obligasi, dan Ternak [cite: 2026-01-20].
+            </div>
+            <div class="secret-item">
+                <strong>Memoar:</strong> "This is the time for the people to party" saat BTC naik dari $0.01 [cite: 2025-12-29].
+            </div>
+            <div class="secret-item">
+                <strong>Alokasi:</strong> 80-90% Blue Chip, 10-20% Prajurit (Bajing Loncat).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const walletTarget = "0xf62F4b6EAbc088A7263139E46878b12C097e6884";
+
+        function copyWallet() {
+            navigator.clipboard.writeText(walletTarget);
+            document.getElementById('copy-msg').style.display = 'block';
+            setTimeout(() => { document.getElementById('copy-msg').style.display = 'none'; }, 2000);
+        }
+
+        async function processPayment() {
+            if (window.ethereum) {
+                try {
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
+                    await provider.send("eth_requestAccounts", []);
+                    document.getElementById('pay-btn').innerText = "MEMVERIFIKASI BLOCKCHAIN...";
+                    // Simulasi Verifikasi
+                    setTimeout(showSecret, 3000);
+                } catch (e) {
+                    alert("Koneksi Dompet Gagal!");
+                }
+            } else { alert("Gunakan Browser di Trust Wallet/MetaMask!"); }
+        }
+
+        function showSecret() {
+            document.getElementById('public-view').style.display = 'none';
+            document.getElementById('whale-content').style.display = 'block';
+            document.getElementById('sys-status').innerText = "● STATUS: WHALE TERVERIFIKASI";
+        }
+    </script>
+</body>
+</html>
