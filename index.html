@@ -3,151 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | OFFICIAL HUB v3.5</title>
-    <meta name="google-site-verification" content="fC_7NZk0K71MhNxFMv-DFJuS2ulaYdWqPHZ340IhC_Q" />
+    <title>AIAGENT | THE TOTAL TERMINAL v4.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
-    
     <style>
-        /* PROTEKSI TOTAL AIAGENT */
-        * { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-        
-        body { 
-            background: radial-gradient(circle at center, #020617 0%, #000000 100%); 
-            color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; 
-        }
-        .container { 
-            max-width: 950px; margin: 20px auto; 
-            border: 1px solid rgba(59, 130, 246, 0.4); 
-            background-color: rgba(15, 23, 42, 0.9); 
-            padding: 30px; border-radius: 25px; 
-            box-shadow: 0 0 50px rgba(59, 130, 246, 0.2);
-            backdrop-filter: blur(15px);
-        }
-        .logo-agent { width: 110px; height: 110px; border-radius: 50%; border: 2px solid #3b82f6; box-shadow: 0 0 25px rgba(59, 130, 246, 0.5); margin-bottom: 20px; }
-        h1 { color: #3b82f6; text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); letter-spacing: 3px; font-weight: 800; margin: 0; }
-        .status { color: #10b981; font-weight: bold; font-size: 0.9em; margin-bottom: 25px; text-transform: uppercase; }
-        
-        /* TICKER LIVE */
-        .ticker-wrap { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #1e293b; overflow: hidden; }
-        .ticker-item { display: inline-block; padding: 0 15px; font-size: 0.8em; color: #3b82f6; font-weight: bold; }
+        * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
+        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
+        .container { max-width: 900px; margin: 20px auto; border: 1px solid #3b82f6; background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 25px; box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); backdrop-filter: blur(15px); }
+        .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #3b82f6; margin-bottom: 15px; }
+        h1 { color: #3b82f6; letter-spacing: 3px; margin: 0; }
+        .status { color: #10b981; font-weight: bold; font-size: 0.8em; margin-bottom: 20px; }
 
-        /* GRID GRAFIK */
-        .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
-        .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 300px; }
-        
-        /* BETTING UI */
-        .betting-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
+        /* TAB SYSTEM */
+        .tab-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: #3b82f6; color: white; border-color: #60a5fa; box-shadow: 0 0 10px #3b82f6; }
+
+        .widget-section { background: #000; border-radius: 15px; border: 1px solid #3b82f6; overflow: hidden; height: 450px; margin-bottom: 20px; }
+
+        /* BETTING & PAYMENT */
+        .betting-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
         .bet-card { background: #0f172a; border: 1px solid #1e293b; padding: 15px; border-radius: 12px; }
-        .bet-card h4 { margin: 0 0 8px 0; font-size: 0.75em; color: #94a3b8; text-transform: uppercase; }
-        .bet-input { width: 100%; background: #020617; border: 1px solid #3b82f6; color: #3b82f6; padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; }
+        .bet-input { width: 100%; background: #020617; border: 1px solid #3b82f6; color: #3b82f6; padding: 8px; border-radius: 6px; text-align: center; }
+        .payment-box { border: 2px dashed #3b82f6; padding: 20px; border-radius: 20px; margin: 20px 0; background: rgba(59, 130, 246, 0.05); cursor: pointer; }
+        .btn-pay { background: linear-gradient(45deg, #2563eb, #3b82f6); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; }
 
-        /* AREA RAHASIA */
-        #whale-content { display: none; margin-top: 30px; border-top: 2px solid #3b82f6; padding-top: 20px; text-align: left; animation: fadeIn 1s; }
-        .strategy-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(0,0,0,0.4); }
-        .strategy-table th, .strategy-table td { border: 1px solid #1e293b; padding: 14px; text-align: left; font-size: 0.9em; }
-        .strategy-table th { background: #1e293b; color: #3b82f6; }
-
-        /* PAYMENT BOX */
-        .payment-box { border: 2px dashed #3b82f6; padding: 25px; border-radius: 20px; margin: 25px 0; background: rgba(59, 130, 246, 0.03); cursor: pointer; }
-        .btn-pay { 
-            background: linear-gradient(45deg, #2563eb, #3b82f6); color: white; border: none; 
-            padding: 20px 45px; border-radius: 50px; font-weight: bold; cursor: pointer; 
-            text-transform: uppercase; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); width: 100%;
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) { .chart-grid { grid-template-columns: 1fr; } .betting-grid { grid-template-columns: 1fr; } }
+        #whale-content { display: none; margin-top: 30px; border-top: 2px solid #3b82f6; padding-top: 20px; text-align: left; }
     </style>
 </head>
-<body onkeydown="return false;">
+<body>
 
     <div class="container">
         <img src="logo.png" alt="AIAGENT" class="logo-agent">
         <h1>AIAGENT HUB</h1>
-        <p class="status" id="gate-status">● STATUS: ACCESS RESTRICTED (WHALES ONLY)</p>
-
-        <div class="ticker-wrap">
-            <div class="ticker-item">BTC: <span id="btc-val">$150,000 Target</span></div>
-            <div class="ticker-item">GOLD: BULLISH</div>
-            <div class="ticker-item">ASSET NYATA: READY</div>
-        </div>
+        <p class="status">● MULTI-ASSET TERMINAL: ONLINE</p>
 
         <div id="public-view">
-            <div class="chart-grid">
-                <div class="widget-section">
-                    <div id="btc_chart" style="height: 100%;"></div>
-                    <script src="https://s3.tradingview.com/tv.js"></script>
-                    <script>
-                    new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "D", "theme": "dark", "container_id": "btc_chart", "locale": "id" });
-                    </script>
-                </div>
-                <div class="widget-section">
-                    <div id="gold_chart" style="height: 100%;"></div>
-                    <script>
-                    new TradingView.widget({ "autosize": true, "symbol": "OANDA:XAUUSD", "interval": "D", "theme": "dark", "container_id": "gold_chart", "locale": "id" });
-                    </script>
-                </div>
+            <div class="tab-container">
+                <button class="tab-btn active" onclick="changeChart('BINANCE:BTCUSDT', this)">KRIPTO</button>
+                <button class="tab-btn" onclick="changeChart('OANDA:XAUUSD', this)">LOGAM MULIA</button>
+                <button class="tab-btn" onclick="changeChart('IDX:BBCA', this)">SAHAM (BBCA)</button>
+                <button class="tab-btn" onclick="changeChart('TVC:US10Y', this)">OBLIGASI (10Y)</button>
             </div>
 
+            <div class="widget-section" id="chart-container">
+                </div>
+
             <div class="betting-grid">
-                <div class="bet-card"><h4>Crypto Target</h4><input type="text" class="bet-input" placeholder="BTC $150K"></div>
-                <div class="bet-card"><h4>Gold Prediction</h4><input type="text" class="bet-input" placeholder="$2500/oz"></div>
-                <div class="bet-card"><h4>Real Asset</h4><input type="text" class="bet-input" placeholder="OBLIGASI"></div>
+                <div class="bet-card"><input type="text" class="bet-input" placeholder="BTC Target"></div>
+                <div class="bet-card"><input type="text" class="bet-input" placeholder="Stock Pick"></div>
+                <div class="bet-card"><input type="text" class="bet-input" placeholder="Bond Yield"></div>
             </div>
 
             <div class="payment-box" onclick="copyAddress()">
-                <p style="color:#3b82f6; font-weight:bold; font-size: 1.2em; margin:0;">VERIFIKASI AKSES: 5 USDT</p>
-                <code style="color: #f0b90b; font-size: 0.85em; word-break: break-all;">0xf62F4b6EAbc088A7263139E46878b12C097e6884</code>
-                <p id="copy-notif" style="display:none; color:#10b981; margin-top:10px;">✅ Alamat AIAGENT Disalin!</p>
+                <p style="color:#3b82f6; font-weight:bold; margin:0;">CLAIM WHALE ACCESS: 5 USDT</p>
+                <code style="color: #f0b90b; font-size: 0.8em;">0xf62F4b6EAbc088A7263139E46878b12C097e6884</code>
             </div>
-            
-            <button onclick="payWithWeb3()" class="btn-pay" id="pay-btn">VERIFIKASI IDENTITAS WHALE</button>
-            <p style="font-size: 0.65em; color: #64748b; margin-top:15px;">*Refresh otomatis mengunci portal (Double-Profit Protocol)</p>
+            <button onclick="payWithWeb3()" class="btn-pay" id="pay-btn">VERIFIKASI IDENTITAS</button>
         </div>
 
         <div id="whale-content">
-            <h2 style="color: #10b981;">🔓 STRATEGI AIAGENT DIBUKA</h2>
-            <table class="strategy-table">
-                <tr><th>Aset Strategis</th><th>Instruksi AIAGENT</th></tr>
-                <tr><td>Raja & Petinggi (BTC/ETH)</td><td>DCA Bulanan 80-90%</td></tr>
-                <tr><td>Aset Nyata & Ternak</td><td>Aset Pengaman Jangka Panjang [cite: 2026-01-20]</td></tr>
-                <tr><td>Prajurit (Altcoins)</td><td>Bajing Loncat 10-20%</td></tr>
-            </table>
-            <p style="color: #f0b90b; font-weight: bold; margin-top:20px;">"This is the time for the people to party!" [cite: 2025-12-29]</p>
+            <h2 style="color: #10b981;">🔓 STRATEGI KEJAYAAN RAKYAT</h2>
+            <p>1. 80-90% Modal: Saham Blue Chip & BTC (DCA)</p>
+            <p>2. 10-20% Modal: Bajing Loncat Altcoins</p>
+            <p>3. Exit Plan: Aset Nyata, Obligasi & Ternak [cite: 2026-01-20]</p>
         </div>
     </div>
 
-    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js" defer></script>
-    <script src="https://files.bpcontent.cloud/2026/02/11/14/20260211140309-64ADM621.js" defer></script>
-
+    <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        const myWallet = "0xf62F4b6EAbc088A7263139E46878b12C097e6884"; 
-        
-        function copyAddress() {
-            navigator.clipboard.writeText(myWallet);
-            document.getElementById("copy-notif").style.display = "block";
-            setTimeout(() => { document.getElementById("copy-notif").style.display = "none"; }, 2000);
+        // FUNGSI GANTI GRAFIK OTOMATIS
+        function loadChart(symbol) {
+            new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol,
+                "interval": "D",
+                "theme": "dark",
+                "container_id": "chart-container",
+                "locale": "id",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "allow_symbol_change": true // Whale bisa cari coin/saham apapun di sini!
+            });
         }
 
+        function changeChart(symbol, btn) {
+            loadChart(symbol);
+            let btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        // Load Default (BTC)
+        loadChart('BINANCE:BTCUSDT');
+
+        // WEB3 & PAYMENT
         async function payWithWeb3() {
             if (window.ethereum) {
                 try {
                     const provider = new ethers.providers.Web3Provider(window.ethereum);
                     await provider.send("eth_requestAccounts", []);
-                    document.getElementById('pay-btn').innerText = "MENUNGGU BLOCKCHAIN...";
-                    setTimeout(unlockPortal, 3000);
-                } catch (err) { alert("Koneksi Dibatalkan!"); }
-            } else { alert("Gunakan Trust Wallet / MetaMask!"); }
+                    document.getElementById('pay-btn').innerText = "VERIFIKASI...";
+                    setTimeout(() => {
+                        document.getElementById('public-view').style.display = 'none';
+                        document.getElementById('whale-content').style.display = 'block';
+                    }, 3000);
+                } catch (e) { alert("Gagal!"); }
+            } else { alert("Gunakan Trust Wallet!"); }
         }
 
-        function unlockPortal() {
-            document.getElementById('public-view').style.display = 'none';
-            document.getElementById('whale-content').style.display = 'block';
-            document.getElementById('gate-status').innerText = "● STATUS: AIAGENT VERIFIED";
-            document.getElementById('gate-status').style.color = "#10b981";
+        function copyAddress() {
+            navigator.clipboard.writeText("0xf62F4b6EAbc088A7263139E46878b12C097e6884");
+            alert("Alamat AIAGENT Disalin!");
         }
     </script>
+
+    <script src="https://cdn.botpress.cloud/webchat/v3.6/inject.js" defer></script>
+    <script src="https://files.bpcontent.cloud/2026/02/11/14/20260211140309-64ADM621.js" defer></script>
 </body>
 </html>
-
