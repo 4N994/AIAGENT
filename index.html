@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | OFFICIAL HUB v3</title>
+    <title>AIAGENT | OFFICIAL HUB v3.5</title>
     <meta name="google-site-verification" content="fC_7NZk0K71MhNxFMv-DFJuS2ulaYdWqPHZ340IhC_Q" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     
@@ -16,7 +16,7 @@
             color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; 
         }
         .container { 
-            max-width: 850px; margin: 30px auto; 
+            max-width: 950px; margin: 20px auto; 
             border: 1px solid rgba(59, 130, 246, 0.4); 
             background-color: rgba(15, 23, 42, 0.9); 
             padding: 30px; border-radius: 25px; 
@@ -24,18 +24,20 @@
             backdrop-filter: blur(15px);
         }
         .logo-agent { width: 110px; height: 110px; border-radius: 50%; border: 2px solid #3b82f6; box-shadow: 0 0 25px rgba(59, 130, 246, 0.5); margin-bottom: 20px; }
-        h1 { color: #3b82f6; text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); letter-spacing: 3px; font-weight: 800; }
+        h1 { color: #3b82f6; text-shadow: 0 0 20px rgba(59, 130, 246, 0.6); letter-spacing: 3px; font-weight: 800; margin: 0; }
         .status { color: #10b981; font-weight: bold; font-size: 0.9em; margin-bottom: 25px; text-transform: uppercase; }
         
         /* TICKER LIVE */
         .ticker-wrap { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #1e293b; overflow: hidden; }
         .ticker-item { display: inline-block; padding: 0 15px; font-size: 0.8em; color: #3b82f6; font-weight: bold; }
 
-        .widget-section { margin: 25px 0; background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 350px; }
+        /* GRID GRAFIK */
+        .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 300px; }
         
-        /* BETTING & PREDICTION */
+        /* BETTING UI */
         .betting-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .bet-card { background: #0f172a; border: 1px solid #1e293b; padding: 15px; border-radius: 12px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .bet-card { background: #0f172a; border: 1px solid #1e293b; padding: 15px; border-radius: 12px; }
         .bet-card h4 { margin: 0 0 8px 0; font-size: 0.75em; color: #94a3b8; text-transform: uppercase; }
         .bet-input { width: 100%; background: #020617; border: 1px solid #3b82f6; color: #3b82f6; padding: 8px; border-radius: 6px; text-align: center; font-weight: bold; }
 
@@ -46,14 +48,16 @@
         .strategy-table th { background: #1e293b; color: #3b82f6; }
 
         /* PAYMENT BOX */
-        .payment-box { border: 2px dashed #3b82f6; padding: 25px; border-radius: 20px; margin: 25px 0; background: rgba(59, 130, 246, 0.03); cursor: pointer; transition: 0.3s; }
-        .payment-box:hover { background: rgba(59, 130, 246, 0.08); border-style: solid; }
+        .payment-box { border: 2px dashed #3b82f6; padding: 25px; border-radius: 20px; margin: 25px 0; background: rgba(59, 130, 246, 0.03); cursor: pointer; }
         .btn-pay { 
             background: linear-gradient(45deg, #2563eb, #3b82f6); color: white; border: none; 
             padding: 20px 45px; border-radius: 50px; font-weight: bold; cursor: pointer; 
             text-transform: uppercase; box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); width: 100%;
         }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) { .chart-grid { grid-template-columns: 1fr; } .betting-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body onkeydown="return false;">
@@ -65,33 +69,41 @@
 
         <div class="ticker-wrap">
             <div class="ticker-item">BTC: <span id="btc-val">$150,000 Target</span></div>
-            <div class="ticker-item">OB-YIELD: 4.25%</div>
-            <div class="ticker-item">TERNAK: BULLISH</div>
+            <div class="ticker-item">GOLD: BULLISH</div>
+            <div class="ticker-item">ASSET NYATA: READY</div>
         </div>
 
         <div id="public-view">
-            <div class="widget-section">
-                <div id="tv_chart" style="height: 100%;"></div>
-                <script src="https://s3.tradingview.com/tv.js"></script>
-                <script>
-                new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "D", "theme": "dark", "container_id": "tv_chart", "locale": "id" });
-                </script>
+            <div class="chart-grid">
+                <div class="widget-section">
+                    <div id="btc_chart" style="height: 100%;"></div>
+                    <script src="https://s3.tradingview.com/tv.js"></script>
+                    <script>
+                    new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "D", "theme": "dark", "container_id": "btc_chart", "locale": "id" });
+                    </script>
+                </div>
+                <div class="widget-section">
+                    <div id="gold_chart" style="height: 100%;"></div>
+                    <script>
+                    new TradingView.widget({ "autosize": true, "symbol": "OANDA:XAUUSD", "interval": "D", "theme": "dark", "container_id": "gold_chart", "locale": "id" });
+                    </script>
+                </div>
             </div>
 
             <div class="betting-grid">
-                <div class="bet-card"><h4>Crypto Bet</h4><input type="text" class="bet-input" placeholder="BTC $150K"></div>
-                <div class="bet-card"><h4>Stock Bet</h4><input type="text" class="bet-input" placeholder="BLUE CHIP"></div>
-                <div class="bet-card"><h4>Bond Bet</h4><input type="text" class="bet-input" placeholder="YIELD 4.5%"></div>
+                <div class="bet-card"><h4>Crypto Target</h4><input type="text" class="bet-input" placeholder="BTC $150K"></div>
+                <div class="bet-card"><h4>Gold Prediction</h4><input type="text" class="bet-input" placeholder="$2500/oz"></div>
+                <div class="bet-card"><h4>Real Asset</h4><input type="text" class="bet-input" placeholder="OBLIGASI"></div>
             </div>
 
             <div class="payment-box" onclick="copyAddress()">
                 <p style="color:#3b82f6; font-weight:bold; font-size: 1.2em; margin:0;">VERIFIKASI AKSES: 5 USDT</p>
-                <code style="color: #f0b90b; font-size: 0.85em;">0xf62F4b6EAbc088A7263139E46878b12C097e6884</code>
+                <code style="color: #f0b90b; font-size: 0.85em; word-break: break-all;">0xf62F4b6EAbc088A7263139E46878b12C097e6884</code>
                 <p id="copy-notif" style="display:none; color:#10b981; margin-top:10px;">✅ Alamat AIAGENT Disalin!</p>
             </div>
             
             <button onclick="payWithWeb3()" class="btn-pay" id="pay-btn">VERIFIKASI IDENTITAS WHALE</button>
-            <p style="font-size: 0.65em; color: #64748b; margin-top:15px;">*Refresh otomatis mengunci portal (Double-Profit Protocol active)</p>
+            <p style="font-size: 0.65em; color: #64748b; margin-top:15px;">*Refresh otomatis mengunci portal (Double-Profit Protocol)</p>
         </div>
 
         <div id="whale-content">
@@ -110,7 +122,7 @@
     <script src="https://files.bpcontent.cloud/2026/02/11/14/20260211140309-64ADM621.js" defer></script>
 
     <script>
-        const myWallet = "0xf62F4b6EAbc088A7263139E46878b12C097e6884";
+        const myWallet = "0xf62F4b6EAbc088A7263139E46878b12C097e6884"; 
         
         function copyAddress() {
             navigator.clipboard.writeText(myWallet);
@@ -138,3 +150,4 @@
     </script>
 </body>
 </html>
+
