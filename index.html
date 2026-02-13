@@ -1,46 +1,40 @@
 <!DOCTYPE html>
-<html lang="id" oncontextmenu="return false;">
+<html lang="en" oncontextmenu="return false;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | SOLO LEVELING TERMINAL v4.5</title>
-    <meta name="google-site-verification" content="fC_7NZk0K71MhNxFMv-DFJuS2ulaYdWqPHZ340IhC_Q" />
+    <title>AIAGENT | SYSTEM SELECTION v5.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
-        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; overflow-x: hidden; }
+        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 10px; text-align: center; overflow-x: hidden; }
+        .container { max-width: 900px; margin: 20px auto; border: 1px solid #00f2ff; background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); position: relative; }
         
-        /* CONTAINER UTAMA */
-        .container { max-width: 900px; margin: 20px auto; border: 1px solid #3b82f6; background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 25px; box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); backdrop-filter: blur(15px); position: relative; }
-
-        /* EFEK LOGO CUBIC SOLO LEVELING */
+        /* SOLO LEVELING CUBIC LOGO */
         .logo-container { position: relative; display: inline-block; margin-bottom: 20px; }
-        .logo-agent { 
-            width: 100px; height: 100px; border-radius: 50%; 
-            border: 2px solid #00f2ff; position: relative; z-index: 2;
-            box-shadow: 0 0 20px #00f2ff; cursor: pointer; transition: 0.5s;
-            background: #000;
-        }
-        #cubic-canvas { position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; z-index: 1; pointer-events: none; }
+        .logo-agent { width: 110px; height: 110px; border-radius: 50%; border: 2px solid #00f2ff; z-index: 2; position: relative; background: #000; cursor: pointer; }
+        #cubic-canvas { position: absolute; top: -45px; left: -45px; width: 200px; height: 200px; z-index: 1; pointer-events: none; }
 
-        h1 { color: #3b82f6; letter-spacing: 3px; margin: 0; font-weight: bold; text-shadow: 0 0 10px #3b82f6; }
-        .status { color: #10b981; font-weight: bold; font-size: 0.8em; margin-bottom: 20px; }
+        h1 { color: #00f2ff; letter-spacing: 4px; margin: 0; font-weight: 800; text-transform: uppercase; }
+        .status { color: #10b981; font-weight: bold; font-size: 0.75em; margin-bottom: 20px; letter-spacing: 1px; }
 
-        /* TAB & WIDGET */
-        .tab-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .tab-btn.active { background: #3b82f6; color: white; border-color: #60a5fa; box-shadow: 0 0 15px #3b82f6; }
-        .widget-section { background: #000; border-radius: 15px; border: 1px solid #3b82f6; overflow: hidden; height: 450px; margin-bottom: 20px; }
+        /* TABS & CHARTS */
+        .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; }
+        .tab-btn.active { background: #00f2ff; color: #020617; border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
+        .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 450px; margin-bottom: 20px; }
 
-        /* INPUT & ACTION */
-        .betting-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .bet-input { width: 100%; background: #020617; border: 1px solid #3b82f6; color: #00f2ff; padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; }
-        .payment-box { border: 2px dashed #00f2ff; padding: 20px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.05); cursor: pointer; }
-        .btn-pay { background: linear-gradient(45deg, #0066ff, #00f2ff); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
+        /* INPUTS */
+        .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .terminal-input { width: 100%; background: #020617; border: 1px solid #1e293b; color: #00f2ff; padding: 12px; border-radius: 8px; text-align: center; font-family: monospace; font-size: 11px; }
 
-        #whale-content { display: none; margin-top: 30px; border-top: 2px solid #3b82f6; padding-top: 20px; text-align: left; }
-        .secret-card { background: #0f172a; padding: 20px; border-radius: 15px; border-left: 5px solid #00f2ff; margin-bottom: 10px; }
-        .truth-text { color: #475569; font-size: 10px; margin-top: 20px; font-style: italic; }
+        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; transition: 0.3s; }
+        .access-box:hover { background: rgba(0, 242, 255, 0.08); }
+        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; }
+
+        #secret-area { display: none; margin-top: 30px; border-top: 1px solid #334155; padding-top: 25px; text-align: left; }
+        .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
+        .footer-note { color: #475569; font-size: 10px; margin-top: 25px; font-style: italic; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -48,51 +42,53 @@
     <div class="container">
         <div class="logo-container">
             <canvas id="cubic-canvas"></canvas>
-            <img src="logo-aiagent-cubic.png" alt="AI" class="logo-agent">
+            <img src="logo-aiagent-cubic.png" alt="AGENT" class="logo-agent">
         </div>
         <h1>AIAGENT HUB</h1>
-        <p class="status">● SYSTEM CONNECTED: LIVE DATA STREAM</p>
+        <p class="status">● GLOBAL TERMINAL: SYSTEM ACTIVE</p>
 
-        <div id="public-view">
+        <div id="terminal-view">
             <div class="tab-container">
-                <button class="tab-btn active" onclick="changeChart('BINANCE:BTCUSDT', this)">KRIPTO</button>
-                <button class="tab-btn" onclick="changeChart('OANDA:XAUUSD', this)">LOGAM MULIA</button>
-                <button class="tab-btn" onclick="changeChart('IDX:BBCA', this)">SAHAM (BBCA)</button>
-                <button class="tab-btn" onclick="changeChart('TVC:ID10Y', this)">OBLIGASI (ID 10Y)</button>
+                <button class="tab-btn active" onclick="changeChart('BINANCE:BTCUSDT', this)">CRYPTO</button>
+                <button class="tab-btn" onclick="changeChart('OANDA:XAUUSD', this)">GOLD (XAU)</button>
+                <button class="tab-btn" onclick="changeChart('IDX:BBCA', this)">STOCKS (BBCA)</button>
+                <button class="tab-btn" onclick="changeChart('TVC:US10Y', this)">TREASURY (10Y)</button>
             </div>
 
             <div class="widget-section" id="chart-container"></div>
 
-            <div class="betting-grid">
-                <input type="text" class="bet-input" placeholder="BTC Target: 0.0001">
-                <input type="text" class="bet-input" placeholder="Stock: BBCA">
-                <input type="text" class="bet-input" placeholder="Yield: ID 10Y">
+            <div class="input-grid">
+                <input type="text" class="terminal-input" placeholder="BTC TARGET: 0.0001" readonly>
+                <input type="text" class="terminal-input" placeholder="STOCK: BBCA" readonly>
+                <input type="text" class="terminal-input" placeholder="ASSET: REAL ESTATE" readonly>
             </div>
 
-            <div class="payment-box" onclick="copyAddress()">
-                <p style="color:#00f2ff; font-weight:bold; margin:0;">CLAIM WHALE ACCESS: 5 USDT</p>
-                <code id="wallet-addr" style="color: #f0b90b; font-size: 0.8em;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+            <div class="access-box" onclick="copyAddr()">
+                <p style="color:#00f2ff; font-weight:bold; margin:0; font-size: 14px;">UNLOCK WHALE INSIGHTS: 5 USDT</p>
+                <code id="wallet" style="color: #f0b90b; font-size: 0.8em; display: block; margin-top: 5px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                <span style="font-size: 9px; color: #64748b;">(Click to copy Polygon address)</span>
             </div>
-            <button onclick="payWithWeb3()" class="btn-pay" id="pay-btn">VERIFIKASI IDENTITAS</button>
             
-            <p class="truth-text">"Sistem mendeteksi jejak Maxwell & Epstein. Transisi ke aset nyata dimulai."</p>
+            <button onclick="unlockSystem()" class="btn-action" id="action-btn">VERIFY IDENTITY</button>
+            
+            <p class="footer-note">"System detects Maxwell & Epstein traces. BTC is not just code. Transition to real assets initiated."</p>
         </div>
 
-        <div id="whale-content">
-            <h2 style="color: #00f2ff; text-align: center;">🔓 MEMOAR KEJAYAAN RAKYAT</h2>
-            <div class="secret-card"><p><strong>Core (80-90%):</strong> Blue Chip DCA & Dividen Stabil.</p></div>
-            <div class="secret-card"><p><strong>Speed (10-20%):</strong> Strategi Bajing Loncat Altcoin. Profit ke Trust Wallet.</p></div>
-            <div class="secret-card"><p><strong>Exit:</strong> Obligasi, Real Estate, dan Ternak. [cite: 2026-01-20]</p></div>
+        <div id="secret-area">
+            <h2 style="color: #00f2ff; text-align: center; letter-spacing: 2px;">🔓 THE PEOPLE'S MEMOIR</h2>
+            <div class="memo-card"><strong>1. Core Portfolio (80-90%):</strong> Accumulate Blue Chips & BTC via DCA for long-term growth and stable dividends. [cite: 2025-07-30]</div>
+            <div class="memo-card"><strong>2. Capital Acceleration (10-20%):</strong> Apply "Jumping Squirrel" strategy on small-cap Altcoins. Secure profits immediately to Trust Wallet. [cite: 2025-07-30]</div>
+            <div class="memo-card"><strong>3. Final Exit:</strong> Total conversion to Real Assets, Government Bonds, and Livestock. [cite: 2026-01-20]</div>
+            <p style="text-align: center; font-size: 11px; color: #64748b;">"This is the time for the people to party." - The Next Satoshi [cite: 2025-12-29, 2026-01-01]</p>
         </div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // TRADINGVIEW LIVE ENGINE
         function loadChart(symbol) {
             new TradingView.widget({
                 "autosize": true, "symbol": symbol, "interval": "D", "theme": "dark",
-                "container_id": "chart-container", "locale": "id", "allow_symbol_change": true
+                "container_id": "chart-container", "locale": "en", "allow_symbol_change": true
             });
         }
         function changeChart(symbol, btn) {
@@ -102,44 +98,42 @@
         }
         loadChart('BINANCE:BTCUSDT');
 
-        // EFEK KUBIK SOLO LEVELING (CANVAS ANIMATION)
+        // CUBIC PARTICLES (SOLO LEVELING STYLE)
         const canvas = document.getElementById('cubic-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 200; canvas.height = 200;
-        let particles = [];
+        let pArray = [];
         class Particle {
             constructor() {
                 this.x = 100; this.y = 100;
-                this.size = Math.random() * 6 + 2;
-                this.speedX = Math.random() * 4 - 2;
-                this.speedY = Math.random() * 4 - 2;
-                this.color = '#00f2ff';
+                this.size = Math.random() * 5 + 2;
+                this.speedX = Math.random() * 3 - 1.5;
+                this.speedY = Math.random() * 3 - 1.5;
             }
             update() { this.x += this.speedX; this.y += this.speedY; if (this.size > 0.1) this.size -= 0.1; }
-            draw() { ctx.fillStyle = this.color; ctx.fillRect(this.x, this.y, this.size, this.size); }
+            draw() { ctx.fillStyle = '#00f2ff'; ctx.fillRect(this.x, this.y, this.size, this.size); }
         }
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.push(new Particle());
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update(); particles[i].draw();
-                if (particles[i].size <= 0.1) { particles.splice(i, 1); i--; }
+        function handleParticles() {
+            pArray.push(new Particle());
+            for (let i = 0; i < pArray.length; i++) {
+                pArray[i].update(); pArray[i].draw();
+                if (pArray[i].size <= 0.1) { pArray.splice(i, 1); i--; }
             }
-            requestAnimationFrame(animate);
         }
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); handleParticles(); requestAnimationFrame(animate); }
         animate();
 
-        // WEB3 & UTILITY
-        async function payWithWeb3() {
-            document.getElementById('pay-btn').innerText = "MENELUSURI FILE EPSTEIN...";
+        async function unlockSystem() {
+            document.getElementById('action-btn').innerText = "SCANNING EPSTEIN FILES...";
             setTimeout(() => {
-                document.getElementById('public-view').style.display = 'none';
-                document.getElementById('whale-content').style.display = 'block';
+                document.getElementById('terminal-view').style.display = 'none';
+                document.getElementById('secret-area').style.display = 'block';
+                window.scrollTo(0,0);
             }, 2500);
         }
-        function copyAddress() {
+        function copyAddr() {
             navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
-            alert("Alamat Disalin!");
+            alert("Address Copied!");
         }
     </script>
 </body>
