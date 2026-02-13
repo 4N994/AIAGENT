@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-AGENT NETWORK | SIGNAL INVESTASI</title>
+    <title>SIGNAL INVESTASI | NETWORK</title>
     <style>
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -32,8 +32,11 @@
 </head>
 <body>
     <header>
-        <div class="logo">AI-AGENT (ANTI-SENSOR)</div>
-        <div class="web3-status" onclick="alert('Wallet Connected')"><div class="dot"></div><span>0x881...4163</span></div>
+        <div class="logo">SIGNAL INVESTASI (ANTI-SENSOR)</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div style="font-size: 10px; color: #64748b;">LIQUIDITY: <span id="fake-lp" style="color: #10b981; font-weight: bold;">$1,240,582.44</span></div>
+            <div class="web3-status" onclick="alert('Wallet Connected')"><div class="dot"></div><span>0x881...4163</span></div>
+        </div>
     </header>
 
     <main id="terminal-wrapper">
@@ -63,7 +66,7 @@
                 <h3 style="color: #00f2ff;">🔓 INVESTOR STRATEGY</h3>
                 <div class="memo-card"><strong>Portofolio:</strong> DCA 80-90% Blue Chip. [cite: 2025-07-30]</div>
                 <div class="memo-card"><strong>Bajing Loncat:</strong> 10-20% Altcoin. [cite: 2025-07-30]</div>
-                <div class="memo-card"><strong>Visi:</strong> Waktunya investor pesta! [cite: 2025-12-29]</div>
+                <div class="memo-card"><strong>Visi:</strong> Waktunya investor pesta! [cite: 2025-12-29, 2026-02-13]</div>
             </div>
         </div>
     </main>
@@ -105,7 +108,12 @@
             const stats = document.getElementById('live-stats');
             const user = "0x" + Math.random().toString(16).slice(2, 5).toUpperCase() + "...";
             stats.innerHTML = `RECENT TRANSACTION: ${user} (${Math.random() > 0.8 ? '50' : '5'} USDT)`;
-        }, 5000);
+            
+            const lp = document.getElementById('fake-lp');
+            let current = parseFloat(lp.innerText.replace('$', '').replace(/,/g, ''));
+            let change = (Math.random() * 20) - 8;
+            lp.innerText = '$' + (current + change).toLocaleString(undefined, {minimumFractionDigits: 2});
+        }, 4000);
     </script>
 </body>
 </html>
