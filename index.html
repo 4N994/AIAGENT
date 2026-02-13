@@ -3,59 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | THE TOTAL TERMINAL v4.2</title>
+    <title>AIAGENT | SOLO LEVELING TERMINAL v4.5</title>
     <meta name="google-site-verification" content="fC_7NZk0K71MhNxFMv-DFJuS2ulaYdWqPHZ340IhC_Q" />
-
-    <link rel="icon" href="logo-aiagent-cubic-32x32.png" sizes="32x32" type="image/png">
-    <link rel="apple-touch-icon" href="logo-aiagent-cubic-180x180.png">
-    <link rel="mask-icon" href="logo-aiagent-cubic.svg" color="#3b82f6">
-    <meta name="msapplication-TileImage" content="logo-aiagent-cubic-144x144.png">
-    <meta name="msapplication-TileColor" content="#020617">
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
-        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
-        .container { max-width: 900px; margin: 20px auto; border: 1px solid #3b82f6; background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 25px; box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); backdrop-filter: blur(15px); }
+        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; overflow-x: hidden; }
+        
+        /* CONTAINER UTAMA */
+        .container { max-width: 900px; margin: 20px auto; border: 1px solid #3b82f6; background: rgba(15, 23, 42, 0.9); padding: 25px; border-radius: 25px; box-shadow: 0 0 50px rgba(59, 130, 246, 0.3); backdrop-filter: blur(15px); position: relative; }
+
+        /* EFEK LOGO CUBIC SOLO LEVELING */
+        .logo-container { position: relative; display: inline-block; margin-bottom: 20px; }
         .logo-agent { 
-            width: 100px; 
-            height: 100px; 
-            border-radius: 50%; 
-            border: 2px solid #3b82f6; 
-            margin-bottom: 15px; 
-            /* Ganti gambar logo ke yang baru */
-            content: url('logo-aiagent-cubic.png'); /* Ganti dengan nama file logo baru */
-            background-size: cover;
-            background-position: center;
+            width: 100px; height: 100px; border-radius: 50%; 
+            border: 2px solid #00f2ff; position: relative; z-index: 2;
+            box-shadow: 0 0 20px #00f2ff; cursor: pointer; transition: 0.5s;
+            background: #000;
         }
-        h1 { color: #3b82f6; letter-spacing: 3px; margin: 0; font-weight: bold; }
+        #cubic-canvas { position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; z-index: 1; pointer-events: none; }
+
+        h1 { color: #3b82f6; letter-spacing: 3px; margin: 0; font-weight: bold; text-shadow: 0 0 10px #3b82f6; }
         .status { color: #10b981; font-weight: bold; font-size: 0.8em; margin-bottom: 20px; }
 
-        /* TAB SYSTEM */
+        /* TAB & WIDGET */
         .tab-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .tab-btn.active { background: #3b82f6; color: white; border-color: #60a5fa; box-shadow: 0 0 10px #3b82f6; }
-
+        .tab-btn.active { background: #3b82f6; color: white; border-color: #60a5fa; box-shadow: 0 0 15px #3b82f6; }
         .widget-section { background: #000; border-radius: 15px; border: 1px solid #3b82f6; overflow: hidden; height: 450px; margin-bottom: 20px; }
 
-        /* BETTING & PAYMENT */
+        /* INPUT & ACTION */
         .betting-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .bet-card { background: #0f172a; border: 1px solid #1e293b; padding: 15px; border-radius: 12px; }
-        .bet-input { width: 100%; background: #020617; border: 1px solid #3b82f6; color: #3b82f6; padding: 8px; border-radius: 6px; text-align: center; }
-        .payment-box { border: 2px dashed #3b82f6; padding: 20px; border-radius: 20px; margin: 20px 0; background: rgba(59, 130, 246, 0.05); cursor: pointer; }
-        .btn-pay { background: linear-gradient(45deg, #2563eb, #3b82f6); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; }
+        .bet-input { width: 100%; background: #020617; border: 1px solid #3b82f6; color: #00f2ff; padding: 10px; border-radius: 8px; text-align: center; font-size: 12px; }
+        .payment-box { border: 2px dashed #00f2ff; padding: 20px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.05); cursor: pointer; }
+        .btn-pay { background: linear-gradient(45deg, #0066ff, #00f2ff); color: white; border: none; padding: 18px; border-radius: 50px; font-weight: bold; width: 100%; cursor: pointer; text-transform: uppercase; box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
 
         #whale-content { display: none; margin-top: 30px; border-top: 2px solid #3b82f6; padding-top: 20px; text-align: left; }
-        .secret-card { background: #0f172a; padding: 20px; border-radius: 15px; border-left: 5px solid #10b981; margin-bottom: 10px; }
+        .secret-card { background: #0f172a; padding: 20px; border-radius: 15px; border-left: 5px solid #00f2ff; margin-bottom: 10px; }
         .truth-text { color: #475569; font-size: 10px; margin-top: 20px; font-style: italic; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <img src="logo-aiagent-cubic.png" alt="AIAGENT" class="logo-agent">
+        <div class="logo-container">
+            <canvas id="cubic-canvas"></canvas>
+            <img src="logo-aiagent-cubic.png" alt="AI" class="logo-agent">
+        </div>
         <h1>AIAGENT HUB</h1>
-        <p class="status">● MULTI-ASSET TERMINAL: ONLINE</p>
+        <p class="status">● SYSTEM CONNECTED: LIVE DATA STREAM</p>
 
         <div id="public-view">
             <div class="tab-container">
@@ -68,88 +64,83 @@
             <div class="widget-section" id="chart-container"></div>
 
             <div class="betting-grid">
-                <div class="bet-card"><input type="text" class="bet-input" placeholder="BTC Target: 0.0001"></div>
-                <div class="bet-card"><input type="text" class="bet-input" placeholder="Stock: BBCA"></div>
-                <div class="bet-card"><input type="text" class="bet-input" placeholder="Yield: ID 10Y"></div>
+                <input type="text" class="bet-input" placeholder="BTC Target: 0.0001">
+                <input type="text" class="bet-input" placeholder="Stock: BBCA">
+                <input type="text" class="bet-input" placeholder="Yield: ID 10Y">
             </div>
 
             <div class="payment-box" onclick="copyAddress()">
-                <p style="color:#3b82f6; font-weight:bold; margin:0;">CLAIM WHALE ACCESS: 5 USDT</p>
+                <p style="color:#00f2ff; font-weight:bold; margin:0;">CLAIM WHALE ACCESS: 5 USDT</p>
                 <code id="wallet-addr" style="color: #f0b90b; font-size: 0.8em;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
-                <p style="font-size: 10px; color: #64748b; margin-top: 5px;">(Klik untuk salin alamat Polygon)</p>
             </div>
             <button onclick="payWithWeb3()" class="btn-pay" id="pay-btn">VERIFIKASI IDENTITAS</button>
             
-            <p class="truth-text">"Sistem ini mendeteksi jejak operator Maxwell & Epstein. BTC bukan sekadar kode."</p>
+            <p class="truth-text">"Sistem mendeteksi jejak Maxwell & Epstein. Transisi ke aset nyata dimulai."</p>
         </div>
 
         <div id="whale-content">
-            <h2 style="color: #10b981; text-align: center;">🔓 STRATEGI KEJAYAAN RAKYAT</h2>
-            <div class="secret-card">
-                <p><strong>1. Inti Portofolio (80-90%):</strong> Fokus pada Saham Blue Chip & BTC. Akumulasi cicilan (DCA) untuk dividen dan pertumbuhan stabil.</p>
-            </div>
-            <div class="secret-card">
-                <p><strong>2. Percepatan (10-20%):</strong> Strategi "Bajing Loncat" pada Altcoins. Profit langsung amankan ke Trust Wallet.</p>
-            </div>
-            <div class="secret-card">
-                <p><strong>3. Exit Plan:</strong> Konversi total ke Aset Nyata, Obligasi Pemerintah, dan Ternak. [cite: 2026-01-20]</p>
-            </div>
-            <p style="text-align: center; font-size: 12px; color: #64748b; margin-top: 20px;">"This is the time for the people to party at $0.01" - The Next Satoshi</p>
+            <h2 style="color: #00f2ff; text-align: center;">🔓 MEMOAR KEJAYAAN RAKYAT</h2>
+            <div class="secret-card"><p><strong>Core (80-90%):</strong> Blue Chip DCA & Dividen Stabil.</p></div>
+            <div class="secret-card"><p><strong>Speed (10-20%):</strong> Strategi Bajing Loncat Altcoin. Profit ke Trust Wallet.</p></div>
+            <div class="secret-card"><p><strong>Exit:</strong> Obligasi, Real Estate, dan Ternak. [cite: 2026-01-20]</p></div>
         </div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
+        // TRADINGVIEW LIVE ENGINE
         function loadChart(symbol) {
             new TradingView.widget({
-                "autosize": true,
-                "symbol": symbol,
-                "interval": "D",
-                "theme": "dark",
-                "container_id": "chart-container",
-                "locale": "id",
-                "enable_publishing": false,
-                "hide_side_toolbar": false,
-                "allow_symbol_change": true
+                "autosize": true, "symbol": symbol, "interval": "D", "theme": "dark",
+                "container_id": "chart-container", "locale": "id", "allow_symbol_change": true
             });
         }
-
         function changeChart(symbol, btn) {
             loadChart(symbol);
-            let btns = document.querySelectorAll('.tab-btn');
-            btns.forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
         }
-
         loadChart('BINANCE:BTCUSDT');
 
-        async function payWithWeb3() {
-            if (window.ethereum) {
-                try {
-                    const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    await provider.send("eth_requestAccounts", []);
-                    document.getElementById('pay-btn').innerText = "MENELUSURI FILE EPSTEIN...";
-                    setTimeout(() => {
-                        document.getElementById('public-view').style.display = 'none';
-                        document.getElementById('whale-content').style.display = 'block';
-                        window.scrollTo(0,0);
-                    }, 3000);
-                } catch (e) { alert("Koneksi Dibatalkan"); }
-            } else { 
-                alert("Kirim 5 USDT manual ke alamat 86f lalu klik verifikasi."); 
+        // EFEK KUBIK SOLO LEVELING (CANVAS ANIMATION)
+        const canvas = document.getElementById('cubic-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 200; canvas.height = 200;
+        let particles = [];
+        class Particle {
+            constructor() {
+                this.x = 100; this.y = 100;
+                this.size = Math.random() * 6 + 2;
+                this.speedX = Math.random() * 4 - 2;
+                this.speedY = Math.random() * 4 - 2;
+                this.color = '#00f2ff';
             }
+            update() { this.x += this.speedX; this.y += this.speedY; if (this.size > 0.1) this.size -= 0.1; }
+            draw() { ctx.fillStyle = this.color; ctx.fillRect(this.x, this.y, this.size, this.size); }
         }
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.push(new Particle());
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                if (particles[i].size <= 0.1) { particles.splice(i, 1); i--; }
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
 
+        // WEB3 & UTILITY
+        async function payWithWeb3() {
+            document.getElementById('pay-btn').innerText = "MENELUSURI FILE EPSTEIN...";
+            setTimeout(() => {
+                document.getElementById('public-view').style.display = 'none';
+                document.getElementById('whale-content').style.display = 'block';
+            }, 2500);
+        }
         function copyAddress() {
-            const addr = "0xf62f4b6eabc088a7263139e46878b12cb15ed86f";
-            navigator.clipboard.writeText(addr);
-            alert("Alamat Dompet Disalin!");
+            navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
+            alert("Alamat Disalin!");
         }
-
-        window.onbeforeunload = function() { return "Terminal akan terkunci kembali."; };
     </script>
-
-    <script src="https://cdn.botpress.cloud/webchat/v2.2/inject.js"></script>
-    <script src="https://files.bpcontent.cloud/2025/02/10/06/20250210065039-4QG914O6.js"></script>
 </body>
 </html>
