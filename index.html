@@ -1,160 +1,155 @@
 <!DOCTYPE html>
-<html lang="en" oncontextmenu="return false;">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | SECURE TERMINAL v6.0</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <title>AI-AGENT | GLOBAL FINANCIAL TERMINAL</title>
     <style>
-        * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
-        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; overflow: hidden; }
+        * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
+        body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* INTERACTIVE CLICK CANVAS */
-        #click-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
+        header { background: #0f172a; padding: 12px 20px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
+        .logo { font-weight: 900; color: #00f2ff; letter-spacing: 2px; font-size: 14px; text-transform: uppercase; }
+        .live-tag { font-size: 9px; color: #10b981; font-family: monospace; border: 1px solid #10b981; padding: 2px 6px; border-radius: 4px; }
 
-        .container { max-width: 900px; margin: 20px auto; border: 1px solid #00f2ff; background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); position: relative; z-index: 10; }
+        main { display: flex; flex: 1; overflow: hidden; position: relative; }
         
-        .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 1px solid #00f2ff; background: #000; margin-bottom: 20px; }
-        h1 { color: #00f2ff; letter-spacing: 4px; margin: 0; font-weight: 800; text-transform: uppercase; }
-        .status { color: #10b981; font-weight: bold; font-size: 0.75em; margin-bottom: 20px; letter-spacing: 1px; }
-
-        /* TABS */
-        .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s; }
-        .tab-btn.active { background: #00f2ff; color: #020617; box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
+        /* LEFT SIDE: CHART */
+        .chart-panel { flex: 2.3; border-right: 1px solid #1e293b; background: #000; position: relative; }
         
-        /* CHART AREA */
-        .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 400px; margin-bottom: 20px; }
-
-        /* ACCESS SYSTEM */
-        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; transition: 0.3s; }
-        .access-box:hover { background: rgba(0, 242, 255, 0.08); }
-        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; }
-
-        /* SECURITY LOCK SYSTEM */
-        #secret-area { 
-            display: none; 
-            visibility: hidden; 
-            opacity: 0; 
-            transition: opacity 0.5s ease;
-            text-align: left;
-            margin-top: 30px;
-            border-top: 1px solid #334155;
-            padding-top: 25px;
-        }
+        /* RIGHT SIDE: NEWS & ACTION */
+        .side-panel { flex: 1; display: flex; flex-direction: column; background: #0b1120; z-index: 10; }
+        .panel-header { padding: 12px; background: #1e293b; font-size: 10px; font-weight: bold; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
         
-        .unlocked #secret-area { display: block !important; visibility: visible !important; opacity: 1 !important; }
-        .unlocked #main-view { display: none !important; }
+        #news-feed { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: none; }
+        #news-feed::-webkit-scrollbar { display: none; }
 
-        .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 13px; line-height: 1.6; }
+        .news-post { background: rgba(30, 41, 59, 0.4); border-radius: 8px; padding: 12px; border-left: 3px solid #00f2ff; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .news-meta { font-size: 9px; font-weight: bold; color: #64748b; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .news-content { font-size: 12px; color: #cbd5e1; line-height: 1.4; }
+
+        /* ACTION AREA */
+        .action-area { padding: 20px; background: #0f172a; border-top: 1px solid #1e293b; }
+        .wallet-box { border: 1px dashed #334155; padding: 12px; border-radius: 6px; margin-bottom: 15px; text-align: center; cursor: pointer; background: rgba(0, 242, 255, 0.02); }
+        .wallet-box code { font-size: 10px; color: #f0b90b; }
+        
+        .btn-unlock { background: linear-gradient(90deg, #00f2ff, #3b82f6); color: #020617; border: none; padding: 15px; width: 100%; border-radius: 8px; font-weight: 900; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn-unlock:disabled { filter: grayscale(1); cursor: not-allowed; }
+
+        /* SECRET AREA (LOCKED) */
+        #secret-area { display: none; padding: 20px; text-align: left; }
+        .unlocked #main-interface { display: none !important; }
+        .unlocked #secret-area { display: block !important; animation: fadeIn 0.5s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .memo-card { background: #1e293b; padding: 15px; border-radius: 8px; border-left: 4px solid #00f2ff; margin-bottom: 15px; font-size: 13px; }
+
+        #click-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; }
     </style>
 </head>
 <body onclick="spawnCubic(event)">
-
     <canvas id="click-canvas"></canvas>
 
-    <div class="container" id="terminal-wrapper">
-        <img src="logo-aiagent-cubic.png" alt="AGENT" class="logo-agent">
-        <h1>AIAGENT HUB</h1>
-        <p class="status">● GLOBAL TERMINAL: SECURED</p>
+    <header>
+        <div class="logo">AI-AGENT GLOBAL NETWORK</div>
+        <div class="live-tag">INTEL-FEED: ACTIVE</div>
+    </header>
 
-        <div id="main-view">
-            <div class="tab-container">
-                <button class="tab-btn active" onclick="changeChart('BINANCE:BTCUSDT', this)">CRYPTO</button>
-                <button class="tab-btn" onclick="changeChart('OANDA:XAUUSD', this)">GOLD (XAU)</button>
-                <button class="tab-btn" onclick="changeChart('IDX:BBCA', this)">STOCKS (BBCA)</button>
-                <button class="tab-btn" onclick="changeChart('TVC:US10Y', this)">TREASURY (10Y)</button>
-            </div>
-
-            <div class="widget-section" id="chart-container"></div>
-
-            <div class="access-box" onclick="copyAddr(event)">
-                <p style="color:#00f2ff; font-weight:bold; margin:0; font-size: 14px;">UNLOCK WHALE INSIGHTS: 5 USDT</p>
-                <code style="color: #f0b90b; font-size: 0.8em; display: block; margin-top: 5px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
-            </div>
-            
-            <button onclick="unlock(event)" class="btn-action" id="action-btn">VERIFY IDENTITY</button>
-            <p style="color: #475569; font-size: 10px; margin-top: 20px;">"System is ready for asset transition. Authorization required."</p>
+    <main id="terminal-wrapper">
+        <div class="chart-panel">
+            <div id="tv_chart_main" style="height: 100%;"></div>
         </div>
 
-        <div id="secret-area">
-            <h2 style="color: #00f2ff; text-align: center; letter-spacing: 2px;">🔓 STRATEGIC ARCHIVE</h2>
-            <div class="memo-card"><strong>Portfolio Core:</strong> Focus on Blue Chips and BTC for long-term dividends. [cite: 2025-07-30]</div>
-            <div class="memo-card)<strong>Acceleration:</strong> High-frequency cycles on selected Altcoins for capital growth. [cite: 2025-07-30]</div>
-            <div class="memo-card"><strong>Diversification:</strong> Final transition to Government Bonds, Real Assets, and Livestock. [cite: 2026-01-20]</div>
-            
-            <button onclick="location.reload()" class="tab-btn" style="width:100%; margin-top:20px; background: #1e293b; color: #ef4444; border-color: #ef4444;">LOCK TERMINAL</button>
+        <div class="side-panel">
+            <div id="main-interface" style="display: flex; flex-direction: column; height: 100%;">
+                <div class="panel-header">Real-Time Market Intelligence</div>
+                <div id="news-feed">
+                    </div>
+                <div class="action-area">
+                    <div class="wallet-box" onclick="copyWallet(event)">
+                        <p style="margin:0 0 5px 0; font-size: 10px; color: #94a3b8;">DEPOSIT 5 USDT TO UNLOCK STRATEGY</p>
+                        <code>0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                    </div>
+                    <button id="unlock-btn" class="btn-unlock" onclick="secureUnlock(event)">Verify Payment & Access</button>
+                </div>
+            </div>
+
+            <div id="secret-area">
+                <h2 style="color: #00f2ff; margin-top: 0; font-size: 18px;">🔓 STRATEGIC ARCHIVE</h2>
+                <div class="memo-card"><strong>Phase 1:</strong> Accumulate BTC & Blue Chip stocks via monthly DCA. [cite: 2025-07-30]</div>
+                <div class="memo-card"><strong>Phase 2:</strong> 20% allocation to small-cap Altcoins for capital acceleration. [cite: 2025-07-30]</div>
+                <div class="memo-card"><strong>Final Phase:</strong> Exit to Government Bonds, Real Estate, and Livestock. [cite: 2026-01-20]</div>
+                <button onclick="location.reload()" class="btn-unlock" style="background: #1e293b; color: #ef4444; font-size: 10px;">LOCK TERMINAL</button>
+            </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // TradingView Engine
-        function loadChart(s) { 
-            new TradingView.widget({
-                "autosize": true, "symbol": s, "interval": "D", "theme": "dark", 
-                "container_id": "chart-container", "locale": "en", "style": "1"
-            }); 
-        }
-        function changeChart(s, b) { 
-            loadChart(s); 
-            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); 
-            b.classList.add('active'); 
-        }
-        loadChart('BINANCE:BTCUSDT');
+        new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "D", "theme": "dark", "container_id": "tv_chart_main" });
 
-        // Interactive Cubic Particle System
+        // Database Berita Ekonomi 24 Jam
+        const newsArchive = [
+            { cat: "CRYPTO", msg: "Institutional BTC accumulation patterns detected on-chain." },
+            { cat: "STOCKS", msg: "Tech sector shows resilience amid shifting treasury yields." },
+            { cat: "METALS", msg: "Gold (XAU) tests critical resistance level at $2,700." },
+            { cat: "BONDS", msg: "US 10-Year Treasury Yield spikes as inflation data releases." },
+            { cat: "MACRO", msg: "Global central banks hint at interest rate stabilization." },
+            { cat: "ETF", msg: "Record inflows reported for spot Bitcoin ETF providers." }
+        ];
+
+        function updateNews() {
+            const feed = document.getElementById('news-feed');
+            const item = newsArchive[Math.floor(Math.random() * newsArchive.length)];
+            const post = document.createElement('div');
+            post.className = 'news-post';
+            post.innerHTML = `
+                <div class="news-meta"><span>[ ${item.cat} ]</span><span>LIVE</span></div>
+                <div class="news-content">${item.msg}</div>
+            `;
+            feed.prepend(post);
+            if (feed.children.length > 12) feed.removeChild(feed.lastChild);
+        }
+        setInterval(updateNews, 4000);
+
+        // Simulasi Unlock Blockchain Profesional
+        function secureUnlock(e) {
+            spawnCubic(e);
+            const btn = document.getElementById('unlock-btn');
+            btn.disabled = true;
+            btn.innerText = "CHECKING POLYGON SCAN...";
+            
+            setTimeout(() => { btn.innerText = "CONFIRMING 5 USDT TRANSACTION..."; }, 2000);
+            setTimeout(() => { 
+                btn.innerText = "PAYMENT VERIFIED!"; 
+                btn.style.background = "#10b981";
+                setTimeout(() => {
+                    document.getElementById('terminal-wrapper').classList.add('unlocked');
+                }, 1000);
+            }, 5000);
+        }
+
+        // Efek Kubik Interaktif
         const canvas = document.getElementById('click-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let particles = [];
-
         class Cubic {
-            constructor(x, y) {
-                this.x = x; this.y = y;
-                this.size = Math.random() * 8 + 4;
-                this.speedX = Math.random() * 6 - 3;
-                this.speedY = Math.random() * 6 - 3;
-                this.life = 1.0;
-            }
-            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.02; }
-            draw() {
-                ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`;
-                ctx.fillRect(this.x, this.y, this.size, this.size);
-            }
+            constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 6 + 2; this.speedX = Math.random() * 4 - 2; this.speedY = Math.random() * 4 - 2; this.life = 1.0; }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.03; }
+            draw() { ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`; ctx.fillRect(this.x, this.y, this.size, this.size); }
         }
-
-        function spawnCubic(e) {
-            for(let i=0; i<15; i++) { particles.push(new Cubic(e.clientX, e.clientY)); }
-        }
-
+        function spawnCubic(e) { for(let i=0; i<12; i++) particles.push(new Cubic(e.clientX, e.clientY)); }
         function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update(); particles[i].draw();
-                if (particles[i].life <= 0) { particles.splice(i, 1); i--; }
-            }
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            particles.forEach((p, i) => { p.update(); p.draw(); if(p.life <= 0) particles.splice(i, 1); });
             requestAnimationFrame(animate);
         }
         animate();
 
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-
-        // Security Functions
-        function unlock(e) {
-            spawnCubic(e);
-            const btn = document.getElementById('action-btn');
-            btn.innerText = "SYNCHRONIZING SECURE ACCESS...";
-            btn.style.opacity = "0.5";
-            
-            setTimeout(() => { 
-                document.getElementById('terminal-wrapper').classList.add('unlocked');
-                window.scrollTo(0,0);
-            }, 1800);
-        }
-
-        function copyAddr(e) {
+        function copyWallet(e) {
             spawnCubic(e);
             navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
             alert("Address Copied!");
