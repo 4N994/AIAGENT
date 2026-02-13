@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-AGENT NETWORK | SECURE TERMINAL</title>
+    <title>AI-AGENT NETWORK | THE NEXT SATOSHI TERMINAL</title>
     <style>
         * { box-sizing: border-box; -webkit-user-select: none; user-select: none; }
         body { background: #020617; color: #f8fafc; font-family: 'Inter', sans-serif; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
@@ -11,10 +11,14 @@
         header { background: #0f172a; padding: 12px 20px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .logo { font-weight: 900; color: #00f2ff; letter-spacing: 2px; font-size: 14px; text-transform: uppercase; }
 
+        /* Web3 Status Badge */
+        .web3-status { display: flex; align-items: center; gap: 8px; background: rgba(0, 242, 255, 0.1); border: 1px solid #00f2ff; padding: 6px 15px; border-radius: 20px; font-size: 10px; font-weight: bold; color: #00f2ff; cursor: pointer; transition: 0.3s; }
+        .dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; }
+
         main { display: flex; flex: 1; overflow: hidden; position: relative; }
         .chart-panel { flex: 2.3; border-right: 1px solid #1e293b; background: #000; position: relative; }
         
-        .side-panel { flex: 1; display: flex; flex-direction: column; background: #0b1120; z-index: 10; }
+        .side-panel { flex: 1; display: flex; flex-direction: column; background: #0b1120; z-index: 10; border-left: 1px solid #1e293b; }
         #debate-feed { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: none; }
         #debate-feed::-webkit-scrollbar { display: none; }
 
@@ -22,23 +26,33 @@
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
         .action-area { padding: 20px; background: #0f172a; border-top: 1px solid #1e293b; }
-        .wallet-box { border: 1px dashed #334155; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; background: rgba(0, 242, 255, 0.02); cursor: pointer; }
+        .wallet-box { border: 1px dashed #334155; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; background: rgba(0, 242, 255, 0.02); cursor: pointer; transition: 0.2s; }
+        .wallet-box:hover { border-color: #00f2ff; background: rgba(0, 242, 255, 0.05); }
+        
         .btn-verify { background: linear-gradient(90deg, #00f2ff, #3b82f6); color: #020617; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Secret Area */
+        /* Secret Archive Area */
         #secret-area { display: none; padding: 20px; height: 100%; overflow-y: auto; }
         .unlocked #main-view { display: none !important; }
         .unlocked #secret-area { display: block !important; }
-        .memo-card { background: #1e293b; padding: 15px; border-radius: 8px; border-left: 4px solid #00f2ff; margin-bottom: 15px; font-size: 13px; }
+        .memo-card { background: #1e293b; padding: 15px; border-radius: 8px; border-left: 4px solid #00f2ff; margin-bottom: 15px; font-size: 13px; line-height: 1.5; }
 
         /* Floating WA Button */
-        .float-wa { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; padding: 12px 20px; border-radius: 50px; font-weight: bold; font-size: 11px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,0.2); }
+        .float-wa { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; padding: 12px 20px; border-radius: 50px; font-weight: bold; font-size: 11px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,0.2); transition: 0.3s; }
+        .float-wa:hover { transform: scale(1.05); background: #1eb954; }
+
+        #click-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; }
     </style>
 </head>
 <body onclick="spawnCubic(event)">
+    <canvas id="click-canvas"></canvas>
+
     <header>
         <div class="logo">AI-AGENT NETWORK</div>
-        <div style="font-size: 9px; color: #10b981; border: 1px solid #10b981; padding: 2px 6px; border-radius: 4px;">SYSTEM: ENCRYPTED</div>
+        <div class="web3-status" onclick="connectWalletSim()">
+            <div class="dot"></div>
+            <span id="wallet-status">CONNECT WALLET</span>
+        </div>
     </header>
 
     <main id="terminal-wrapper">
@@ -48,12 +62,13 @@
 
         <div class="side-panel">
             <div id="main-view" style="display: flex; flex-direction: column; height: 100%;">
-                <div style="padding: 12px; background: #1e293b; font-size: 10px; color: #00f2ff; font-weight: bold; text-transform: uppercase;">AI Advisor & Market Debates</div>
+                <div style="padding: 12px; background: #1e293b; font-size: 10px; color: #00f2ff; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #334155;">AI Intelligence Debate</div>
                 <div id="debate-feed"></div>
+                
                 <div class="action-area">
                     <div class="wallet-box" onclick="copyWallet(event)">
                         <p style="margin:0 0 5px 0; font-size: 10px; color: #94a3b8;">DEPOSIT 5 USDT TO UNLOCK STRATEGY</p>
-                        <code style="color: #f0b90b; font-size: 10px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                        <code style="color: #f0b90b; font-size: 11px; font-weight: bold;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
                         <p style="margin:5px 0 0 0; font-size: 9px; color: #00f2ff;">(Click to copy address)</p>
                     </div>
                     <button id="unlock-btn" class="btn-verify" onclick="secureUnlock(event)">Verify Payment & Access</button>
@@ -61,63 +76,114 @@
             </div>
 
             <div id="secret-area">
-                <h3 style="color: #00f2ff; margin-top: 0; text-transform: uppercase;">🔓 Strategic Archive</h3>
-                <div class="memo-card"><strong>Core Portofolio (80-90%):</strong> Akumulasi cicilan (DCA) pada saham blue chip dan BTC. [cite: 2025-07-30]</div>
-                <div class="memo-card"><strong>Percepatan (10-20%):</strong> Strategi "Bajing Loncat" pada altcoin kapitalisasi kecil. [cite: 2025-07-30]</div>
-                <div class="memo-card"><strong>Exit Strategy:</strong> Transisi ke aset nyata, obligasi, dan ternak. [cite: 2026-01-20]</div>
-                <button onclick="location.reload()" class="btn-verify" style="background: #1e293b; color: #ef4444; font-size: 10px;">LOCK SYSTEM</button>
+                <h3 style="color: #00f2ff; margin-top: 0; text-transform: uppercase; font-size: 16px;">🔓 Strategic Archive</h3>
+                <div class="memo-card"><strong>Core Portfolio:</strong> Fokus pada 80-90% saham Blue Chip & BTC melalui DCA bulanan. [cite: 2025-07-30]</div>
+                <div class="memo-card"><strong>Prajurit Mode:</strong> Gunakan 10-20% untuk strategi "Bajing Loncat" di Altcoin kapitalisasi kecil. [cite: 2025-07-30]</div>
+                <div class="memo-card"><strong>Real Wealth:</strong> Tinggalkan kripto saat profit, pindahkan ke Aset Nyata, Obligasi, dan Ternak. [cite: 2026-01-20]</div>
+                <div class="memo-card" style="border-color: #f0b90b;"><strong>Memoar Kejayaan:</strong> Ini adalah waktunya rakyat berpesta. Mulai akumulasi dari bawah. [cite: 2025-12-29]</div>
+                <button onclick="location.reload()" class="btn-verify" style="background: #1e293b; color: #ef4444; font-size: 10px; margin-top: 10px;">RELOCK SYSTEM</button>
             </div>
         </div>
     </main>
 
-    <a id="wa-link" href="#" target="_blank" class="float-wa">Chat Admin for Code</a>
+    <a id="wa-link" href="#" target="_blank" class="float-wa">
+        <span>Chat Satoshi for Access Code</span>
+    </a>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        const nomorWA = "62881012844163"; // Nomor Anda
+        // CONFIGURATION
+        const nomorWA = "62881012844163"; 
         const kodeAkses = "SAT888"; 
         
-        document.getElementById('wa-link').href = `https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20saya%20sudah%20transfer%205%20USDT.%20Mohon%20kirimkan%20kode%20verifikasinya.`;
+        // Dynamic WA Link
+        document.getElementById('wa-link').href = `https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20saya%20ingin%20meminta%20kode%20akses%20setelah%20transfer%205%20USDT.`;
 
+        // TradingView
         new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "theme": "dark", "container_id": "tradingview_widget" });
 
+        // Web3 Connection Sim
+        function connectWalletSim() {
+            const status = document.getElementById('wallet-status');
+            status.innerText = "CONNECTING...";
+            setTimeout(() => {
+                status.innerText = "0x881...4163";
+                alert("Decentralized Network Connected. Silakan transfer 5 USDT ke alamat dompet untuk verifikasi.");
+            }, 1200);
+        }
+
+        // Wallet Copy Logic
         function copyWallet(e) {
+            spawnCubic(e);
             navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
-            if(confirm("Alamat disalin! Kirim bukti transfer ke WhatsApp Satoshi?")) {
-                window.open(`https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20saya%20sudah%20copy%20wallet%20dan%20ingin%20transfer%205%20USDT.`, '_blank');
+            if(confirm("Wallet Copied! Langsung kirim bukti transfer ke WhatsApp Satoshi?")) {
+                window.open(`https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20saya%20sudah%20salin%20alamat%20dompet%20dan%20siap%20transfer%205%20USDT.`, '_blank');
             }
         }
 
+        // Secure Unlock with WA Redirect
         function secureUnlock(e) {
+            spawnCubic(e);
             const btn = document.getElementById('unlock-btn');
             btn.disabled = true;
-            btn.innerText = "CHECKING POLYGON NETWORK...";
+            btn.innerText = "SYNCING BLOCKCHAIN...";
+            
             setTimeout(() => {
-                let userCode = prompt("SECURITY: Masukkan Kode Verifikasi dari Satoshi:");
+                let userCode = prompt("SECURITY: Masukkan Kode Verifikasi yang Anda dapatkan dari WhatsApp Satoshi:");
                 if(userCode === kodeAkses) {
                     btn.innerText = "ACCESS GRANTED!";
                     btn.style.background = "#10b981";
-                    setTimeout(() => { document.getElementById('terminal-wrapper').classList.add('unlocked'); }, 1000);
+                    setTimeout(() => {
+                        document.getElementById('terminal-wrapper').classList.add('unlocked');
+                    }, 1000);
                 } else {
-                    alert("KODE SALAH. Anda akan diarahkan ke WhatsApp untuk verifikasi manual.");
-                    window.open(`https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20kode%20verifikasi%20saya%20salah.%20Mohon%20bantuannya.`, '_blank');
+                    alert("KODE SALAH. Anda akan diarahkan ke WhatsApp Admin untuk validasi ulang.");
+                    window.open(`https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20kode%20saya%20salah.%20Mohon%20bantuannya%20untuk%20verifikasi.`, '_blank');
                     btn.disabled = false;
                     btn.innerText = "Verify Payment & Access";
                 }
             }, 3000);
         }
 
-        const messages = ["DCA on Blue Chips.", "Analyze 'Bajing Loncat' signals.", "Real assets are safety.", "L2 Scaling is active."];
+        // AI Advisor Messages
+        const messages = [
+            "DCA ke Blue Chip adalah kunci.",
+            "Deteksi sinyal 'Bajing Loncat' pada Altcoin.",
+            "Waktunya rakyat berpesta, akumulasi sekarang.",
+            "Ingat: Akhiri di aset nyata dan ternak.",
+            "Keamanan desentralisasi aktif.",
+            "Whale sedang mengakumulasi secara diam-diam."
+        ];
+        
         setInterval(() => {
             const feed = document.getElementById('debate-feed');
             const post = document.createElement('div');
             post.className = 'debate-post';
-            post.innerHTML = `<div style="font-size:10px; color:#94a3b8;">[ ADVISOR_AI ]</div><div style="font-size:12px; font-style:italic;">"${messages[Math.floor(Math.random()*messages.length)]}"</div>`;
+            post.innerHTML = `
+                <div style="font-size:10px; color:#94a3b8; margin-bottom:4px;">[ AI_ADVISOR ]</div>
+                <div style="font-size:12px; font-style:italic;">"${messages[Math.floor(Math.random()*messages.length)]}"</div>
+            `;
             feed.prepend(post);
             if(feed.children.length > 12) feed.removeChild(feed.lastChild);
-        }, 3500);
+        }, 4000);
 
-        function spawnCubic(e) { /* Efek partikel kubik tetap aktif */ }
+        // Particle Effect
+        const canvas = document.getElementById('click-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let p = [];
+        class Cubic {
+            constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 5 + 2; this.speedX = Math.random() * 3 - 1.5; this.speedY = Math.random() * 3 - 1.5; this.life = 1.0; }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.04; }
+            draw() { ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`; ctx.fillRect(this.x, this.y, this.size, this.size); }
+        }
+        function spawnCubic(e) { for(let i=0; i<8; i++) p.push(new Cubic(e.clientX, e.clientY)); }
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            p.forEach((item, i) => { item.update(); item.draw(); if(item.life <= 0) p.splice(i, 1); });
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
