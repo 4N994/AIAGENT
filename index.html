@@ -3,43 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | ELITE TERMINAL v5.8</title>
+    <title>AIAGENT | SECURE TERMINAL v6.0</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
         body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; overflow: hidden; }
         
+        /* INTERACTIVE CLICK CANVAS */
         #click-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
 
         .container { max-width: 900px; margin: 20px auto; border: 1px solid #00f2ff; background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); position: relative; z-index: 10; }
         
-        /* LOGO TANPA EFEK */
         .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 1px solid #00f2ff; background: #000; margin-bottom: 20px; }
-        
         h1 { color: #00f2ff; letter-spacing: 4px; margin: 0; font-weight: 800; text-transform: uppercase; }
         .status { color: #10b981; font-weight: bold; font-size: 0.75em; margin-bottom: 20px; letter-spacing: 1px; }
 
+        /* TABS */
         .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
         .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s; }
         .tab-btn.active { background: #00f2ff; color: #020617; box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
         
+        /* CHART AREA */
         .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 400px; margin-bottom: 20px; }
 
-        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; }
+        /* ACCESS SYSTEM */
+        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; transition: 0.3s; }
+        .access-box:hover { background: rgba(0, 242, 255, 0.08); }
         .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; }
 
-        #secret-area { display: none; margin-top: 30px; border-top: 1px solid #334155; padding-top: 25px; text-align: left; }
-        .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 13px; }
+        /* SECURITY LOCK SYSTEM */
+        #secret-area { 
+            display: none; 
+            visibility: hidden; 
+            opacity: 0; 
+            transition: opacity 0.5s ease;
+            text-align: left;
+            margin-top: 30px;
+            border-top: 1px solid #334155;
+            padding-top: 25px;
+        }
+        
+        .unlocked #secret-area { display: block !important; visibility: visible !important; opacity: 1 !important; }
+        .unlocked #main-view { display: none !important; }
+
+        .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 13px; line-height: 1.6; }
     </style>
 </head>
 <body onclick="spawnCubic(event)">
 
     <canvas id="click-canvas"></canvas>
 
-    <div class="container">
+    <div class="container" id="terminal-wrapper">
         <img src="logo-aiagent-cubic.png" alt="AGENT" class="logo-agent">
         <h1>AIAGENT HUB</h1>
-        <p class="status">● GLOBAL TERMINAL: ACTIVE</p>
+        <p class="status">● GLOBAL TERMINAL: SECURED</p>
 
         <div id="main-view">
             <div class="tab-container">
@@ -57,25 +74,40 @@
             </div>
             
             <button onclick="unlock(event)" class="btn-action" id="action-btn">VERIFY IDENTITY</button>
+            <p style="color: #475569; font-size: 10px; margin-top: 20px;">"System is ready for asset transition. Authorization required."</p>
         </div>
 
         <div id="secret-area">
-            <h2 style="color: #00f2ff; text-align: center;">🔓 STRATEGIC ARCHIVE</h2>
+            <h2 style="color: #00f2ff; text-align: center; letter-spacing: 2px;">🔓 STRATEGIC ARCHIVE</h2>
             <div class="memo-card"><strong>Portfolio Core:</strong> Focus on Blue Chips and BTC for long-term dividends. [cite: 2025-07-30]</div>
-            <div class="memo-card"><strong>Acceleration:</strong> High-frequency cycles on selected Altcoins. [cite: 2025-07-30]</div>
-            <div class="memo-card"><strong>Diversification:</strong> Transition to Bonds, Real Assets, and Livestock. [cite: 2026-01-20]</div>
+            <div class="memo-card)<strong>Acceleration:</strong> High-frequency cycles on selected Altcoins for capital growth. [cite: 2025-07-30]</div>
+            <div class="memo-card"><strong>Diversification:</strong> Final transition to Government Bonds, Real Assets, and Livestock. [cite: 2026-01-20]</div>
+            
+            <button onclick="location.reload()" class="tab-btn" style="width:100%; margin-top:20px; background: #1e293b; color: #ef4444; border-color: #ef4444;">LOCK TERMINAL</button>
         </div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        function loadChart(s) { new TradingView.widget({"autosize": true, "symbol": s, "interval": "D", "theme": "dark", "container_id": "chart-container", "locale": "en"}); }
-        function changeChart(s, b) { loadChart(s); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); }
+        // TradingView Engine
+        function loadChart(s) { 
+            new TradingView.widget({
+                "autosize": true, "symbol": s, "interval": "D", "theme": "dark", 
+                "container_id": "chart-container", "locale": "en", "style": "1"
+            }); 
+        }
+        function changeChart(s, b) { 
+            loadChart(s); 
+            document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); 
+            b.classList.add('active'); 
+        }
         loadChart('BINANCE:BTCUSDT');
 
+        // Interactive Cubic Particle System
         const canvas = document.getElementById('click-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
         let particles = [];
 
         class Cubic {
@@ -87,10 +119,15 @@
                 this.life = 1.0;
             }
             update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.02; }
-            draw() { ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`; ctx.fillRect(this.x, this.y, this.size, this.size); }
+            draw() {
+                ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
         }
 
-        function spawnCubic(e) { for(let i=0; i<15; i++) { particles.push(new Cubic(e.clientX, e.clientY)); } }
+        function spawnCubic(e) {
+            for(let i=0; i<15; i++) { particles.push(new Cubic(e.clientX, e.clientY)); }
+        }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -102,13 +139,19 @@
         }
         animate();
 
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // Security Functions
         function unlock(e) {
             spawnCubic(e);
-            document.getElementById('action-btn').innerText = "SYNCHRONIZING...";
+            const btn = document.getElementById('action-btn');
+            btn.innerText = "SYNCHRONIZING SECURE ACCESS...";
+            btn.style.opacity = "0.5";
+            
             setTimeout(() => { 
-                document.getElementById('main-view').style.display = 'none'; 
-                document.getElementById('secret-area').style.display = 'block'; 
-            }, 1500);
+                document.getElementById('terminal-wrapper').classList.add('unlocked');
+                window.scrollTo(0,0);
+            }, 1800);
         }
 
         function copyAddr(e) {
