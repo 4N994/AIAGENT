@@ -3,29 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | INTERACTIVE TERMINAL v5.5</title>
+    <title>AIAGENT | ELITE TERMINAL v5.8</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
         body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; overflow: hidden; }
         
-        /* FULL SCREEN CLICK EFFECT CANVAS */
         #click-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
 
         .container { max-width: 900px; margin: 20px auto; border: 1px solid #00f2ff; background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); position: relative; z-index: 10; }
         
-        .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #00f2ff; background: #000; margin-bottom: 20px; box-shadow: 0 0 15px #00f2ff; }
+        /* LOGO TANPA EFEK */
+        .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 1px solid #00f2ff; background: #000; margin-bottom: 20px; }
+        
         h1 { color: #00f2ff; letter-spacing: 4px; margin: 0; font-weight: 800; text-transform: uppercase; }
         .status { color: #10b981; font-weight: bold; font-size: 0.75em; margin-bottom: 20px; letter-spacing: 1px; }
 
         .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s; position: relative; overflow: hidden; }
+        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s; }
         .tab-btn.active { background: #00f2ff; color: #020617; box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
         
         .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 400px; margin-bottom: 20px; }
 
-        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; position: relative; }
-        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; position: relative; }
+        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; }
+        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; }
 
         #secret-area { display: none; margin-top: 30px; border-top: 1px solid #334155; padding-top: 25px; text-align: left; }
         .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 13px; }
@@ -38,7 +39,7 @@
     <div class="container">
         <img src="logo-aiagent-cubic.png" alt="AGENT" class="logo-agent">
         <h1>AIAGENT HUB</h1>
-        <p class="status">● GLOBAL TERMINAL: ACTIVE INTERACTION MODE</p>
+        <p class="status">● GLOBAL TERMINAL: ACTIVE</p>
 
         <div id="main-view">
             <div class="tab-container">
@@ -53,18 +54,16 @@
             <div class="access-box" onclick="copyAddr(event)">
                 <p style="color:#00f2ff; font-weight:bold; margin:0; font-size: 14px;">UNLOCK WHALE INSIGHTS: 5 USDT</p>
                 <code style="color: #f0b90b; font-size: 0.8em; display: block; margin-top: 5px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
-                <small style="font-size: 9px; color: #64748b;">(Click box to copy address)</small>
             </div>
             
             <button onclick="unlock(event)" class="btn-action" id="action-btn">VERIFY IDENTITY</button>
         </div>
 
         <div id="secret-area">
-            <h2 style="color: #00f2ff; text-align: center;">🔓 THE PEOPLE'S PARTY</h2>
-            <div class="memo-card"><strong>Core Portfolio (80-90%):</strong> Accumulate Blue Chips & BTC.</div>
-            <div class="memo-card"><strong>Acceleration (10-20%):</strong> Quick profit cycles on Altcoins.</div>
-            <div class="memo-card"><strong>Exit Plan:</strong> Shift to Government Bonds & Real Assets.</div>
-            <p style="text-align: center; font-size: 11px; color: #64748b;">"Time for the people to party." - The Next Satoshi</p>
+            <h2 style="color: #00f2ff; text-align: center;">🔓 STRATEGIC ARCHIVE</h2>
+            <div class="memo-card"><strong>Portfolio Core:</strong> Focus on Blue Chips and BTC for long-term dividends. [cite: 2025-07-30]</div>
+            <div class="memo-card"><strong>Acceleration:</strong> High-frequency cycles on selected Altcoins. [cite: 2025-07-30]</div>
+            <div class="memo-card"><strong>Diversification:</strong> Transition to Bonds, Real Assets, and Livestock. [cite: 2026-01-20]</div>
         </div>
     </div>
 
@@ -74,11 +73,9 @@
         function changeChart(s, b) { loadChart(s); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); }
         loadChart('BINANCE:BTCUSDT');
 
-        // MULTI-TARGET CUBIC EFFECT ENGINE
         const canvas = document.getElementById('click-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let particles = [];
 
         class Cubic {
@@ -89,21 +86,11 @@
                 this.speedY = Math.random() * 6 - 3;
                 this.life = 1.0;
             }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                this.life -= 0.02;
-            }
-            draw() {
-                ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`;
-                ctx.fillRect(this.x, this.y, this.size, this.size);
-            }
+            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.02; }
+            draw() { ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`; ctx.fillRect(this.x, this.y, this.size, this.size); }
         }
 
-        function spawnCubic(e) {
-            for(let i=0; i<15; i++) {
-                particles.push(new Cubic(e.clientX, e.clientY));
-            }
-        }
+        function spawnCubic(e) { for(let i=0; i<15; i++) { particles.push(new Cubic(e.clientX, e.clientY)); } }
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -115,10 +102,8 @@
         }
         animate();
 
-        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
-
         function unlock(e) {
-            spawnCubic(e); // Trigger effect on button click
+            spawnCubic(e);
             document.getElementById('action-btn').innerText = "SYNCHRONIZING...";
             setTimeout(() => { 
                 document.getElementById('main-view').style.display = 'none'; 
@@ -127,7 +112,7 @@
         }
 
         function copyAddr(e) {
-            spawnCubic(e); // Trigger effect on copy click
+            spawnCubic(e);
             navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
             alert("Address Copied!");
         }
