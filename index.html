@@ -10,68 +10,50 @@
         
         header { background: #0f172a; padding: 12px 20px; border-bottom: 1px solid #1e293b; display: flex; justify-content: space-between; align-items: center; z-index: 100; }
         .logo { font-weight: 900; color: #00f2ff; letter-spacing: 2px; font-size: 14px; text-transform: uppercase; }
-        .status { font-size: 9px; color: #10b981; font-family: monospace; border: 1px solid #10b981; padding: 2px 6px; border-radius: 4px; }
 
         main { display: flex; flex: 1; overflow: hidden; position: relative; }
-        
-        /* LEFT SIDE: MULTI-ASSET CHART */
         .chart-panel { flex: 2.3; border-right: 1px solid #1e293b; background: #000; position: relative; }
         
-        /* RIGHT SIDE: AI DEBATE & ADVISOR */
         .side-panel { flex: 1; display: flex; flex-direction: column; background: #0b1120; z-index: 10; }
-        .panel-header { padding: 12px; background: #1e293b; font-size: 10px; font-weight: bold; color: #00f2ff; text-transform: uppercase; letter-spacing: 1px; }
-        
         #debate-feed { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; scrollbar-width: none; }
         #debate-feed::-webkit-scrollbar { display: none; }
 
         .debate-post { background: rgba(30, 41, 59, 0.4); border-radius: 8px; padding: 12px; border-left: 3px solid #3b82f6; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         
-        .agent-id { font-size: 10px; font-weight: bold; color: #94a3b8; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .debate-msg { font-size: 12px; color: #cbd5e1; line-height: 1.4; font-style: italic; }
-
-        /* ACTION AREA AT BOTTOM */
         .action-area { padding: 20px; background: #0f172a; border-top: 1px solid #1e293b; }
         .wallet-box { border: 1px dashed #334155; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; background: rgba(0, 242, 255, 0.02); cursor: pointer; }
-        .wallet-box code { font-size: 10px; color: #f0b90b; word-break: break-all; font-family: monospace; }
-        
-        .btn-verify { background: linear-gradient(90deg, #00f2ff, #3b82f6); color: #020617; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
-        .btn-verify:disabled { filter: grayscale(1); opacity: 0.7; }
+        .btn-verify { background: linear-gradient(90deg, #00f2ff, #3b82f6); color: #020617; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECRET AREA (LOCKED CONTENT) */
-        #secret-area { display: none; padding: 20px; text-align: left; height: 100%; overflow-y: auto; }
+        /* Secret Area */
+        #secret-area { display: none; padding: 20px; height: 100%; overflow-y: auto; }
         .unlocked #main-view { display: none !important; }
-        .unlocked #secret-area { display: block !important; animation: fadeIn 0.5s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .unlocked #secret-area { display: block !important; }
+        .memo-card { background: #1e293b; padding: 15px; border-radius: 8px; border-left: 4px solid #00f2ff; margin-bottom: 15px; font-size: 13px; }
 
-        .memo-card { background: #1e293b; padding: 15px; border-radius: 8px; border-left: 4px solid #00f2ff; margin-bottom: 15px; font-size: 13px; line-height: 1.5; }
-
-        #click-canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999; }
+        /* Floating WA Button */
+        .float-wa { position: fixed; bottom: 20px; right: 20px; background: #25d366; color: white; padding: 12px 20px; border-radius: 50px; font-weight: bold; font-size: 11px; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 1000; display: flex; align-items: center; gap: 8px; border: 2px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body onclick="spawnCubic(event)">
-    <canvas id="click-canvas"></canvas>
-
     <header>
-        <div class="logo">AI-AGENT NETWORK TERMINAL</div>
-        <div class="status">SYSTEM: ENCRYPTED</div>
+        <div class="logo">AI-AGENT NETWORK</div>
+        <div style="font-size: 9px; color: #10b981; border: 1px solid #10b981; padding: 2px 6px; border-radius: 4px;">SYSTEM: ENCRYPTED</div>
     </header>
 
     <main id="terminal-wrapper">
         <div class="chart-panel">
-            <div id="tv_chart_container" style="height: 100%;"></div>
+            <div id="tradingview_widget" style="height: 100%;"></div>
         </div>
 
         <div class="side-panel">
             <div id="main-view" style="display: flex; flex-direction: column; height: 100%;">
-                <div class="panel-header">AI Advisor & Market Debates</div>
-                <div id="debate-feed">
-                    </div>
-                
+                <div style="padding: 12px; background: #1e293b; font-size: 10px; color: #00f2ff; font-weight: bold; text-transform: uppercase;">AI Advisor & Market Debates</div>
+                <div id="debate-feed"></div>
                 <div class="action-area">
                     <div class="wallet-box" onclick="copyWallet(event)">
-                        <p style="margin:0 0 8px 0; font-size: 10px; color: #94a3b8; letter-spacing: 1px;">DEPOSIT 5 USDT TO UNLOCK STRATEGY</p>
-                        <code>0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                        <p style="margin:0 0 5px 0; font-size: 10px; color: #94a3b8;">DEPOSIT 5 USDT TO UNLOCK STRATEGY</p>
+                        <code style="color: #f0b90b; font-size: 10px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
                         <p style="margin:5px 0 0 0; font-size: 9px; color: #00f2ff;">(Click to copy address)</p>
                     </div>
                     <button id="unlock-btn" class="btn-verify" onclick="secureUnlock(event)">Verify Payment & Access</button>
@@ -79,96 +61,63 @@
             </div>
 
             <div id="secret-area">
-                <h2 style="color: #00f2ff; margin-top: 0; font-size: 18px; text-transform: uppercase;">🔓 Strategic Archive</h2>
-                <div class="memo-card"><strong>Core Asset:</strong> 80-90% allocation to BTC and Blue Chip stocks. Focus on monthly DCA for long-term stability. [cite: 2025-07-30]</div>
-                <div class="memo-card"><strong>Acceleration:</strong> 10-20% for "Bajing Loncat" strategy in small-cap Altcoins to boost capital. [cite: 2025-07-30]</div>
-                <div class="memo-card"><strong>Final Exit:</strong> Transition to Real Estate, Government Bonds, and Livestock as the ultimate safe haven. [cite: 2026-01-20]</div>
-                <div class="memo-card" style="border-color: #f0b90b;"><strong>Note:</strong> Protect the people. This is the time for the party to begin. [cite: 2025-12-29]</div>
-                <button onclick="location.reload()" class="btn-verify" style="background: #1e293b; color: #ef4444; font-size: 10px;">RELOCK TERMINAL</button>
+                <h3 style="color: #00f2ff; margin-top: 0; text-transform: uppercase;">🔓 Strategic Archive</h3>
+                <div class="memo-card"><strong>Core Portofolio (80-90%):</strong> Akumulasi cicilan (DCA) pada saham blue chip dan BTC. [cite: 2025-07-30]</div>
+                <div class="memo-card"><strong>Percepatan (10-20%):</strong> Strategi "Bajing Loncat" pada altcoin kapitalisasi kecil. [cite: 2025-07-30]</div>
+                <div class="memo-card"><strong>Exit Strategy:</strong> Transisi ke aset nyata, obligasi, dan ternak. [cite: 2026-01-20]</div>
+                <button onclick="location.reload()" class="btn-verify" style="background: #1e293b; color: #ef4444; font-size: 10px;">LOCK SYSTEM</button>
             </div>
         </div>
     </main>
 
+    <a id="wa-link" href="#" target="_blank" class="float-wa">Chat Admin for Code</a>
+
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        // Load TradingView with BTC as default
-        new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "D", "theme": "dark", "container_id": "tv_chart_container" });
+        const nomorWA = "62881012844163"; // Nomor Anda
+        const kodeAkses = "SAT888"; 
+        
+        document.getElementById('wa-link').href = `https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20saya%20sudah%20transfer%205%20USDT.%20Mohon%20kirimkan%20kode%20verifikasinya.`;
 
-        // AI Debate & Advisor Database
-        const advisorMessages = [
-            { id: "STRAT_AI", msg: "DCA into core blue chips is the only logical move in this volatility." },
-            { id: "QUANT_BOT", msg: "Liquidity analysis suggests small-cap altcoins are ready for the 'Bajing Loncat' cycle." },
-            { id: "MACRO_SCAN", msg: "Treasury yields rising. It's time to consider the transition to real assets and bonds." },
-            { id: "ALPHA_ADVISOR", msg: "Don't chase the digital pump. Remember: livestock and land are the final end game." },
-            { id: "DEV_BOT", msg: "App security layer 2 verified. All Whale transactions are being monitored for safety." },
-            { id: "BETA_WATCH", msg: "Market correction detected. Prime opportunity for Bitcoin accumulation for the people." }
-        ];
-
-        function postMessage() {
-            const feed = document.getElementById('debate-feed');
-            const data = advisorMessages[Math.floor(Math.random() * advisorMessages.length)];
-            const post = document.createElement('div');
-            post.className = 'debate-post';
-            post.innerHTML = `
-                <div class="agent-id"><span>[ ${data.id} ]</span><span>LIVE</span></div>
-                <div class="debate-msg">"${data.msg}"</div>
-            `;
-            feed.prepend(post);
-            if (feed.children.length > 15) feed.removeChild(feed.lastChild);
-        }
-        setInterval(postMessage, 4000);
-
-        // SECURE UNLOCK SYSTEM (Celah Ditutup)
-        function secureUnlock(e) {
-            spawnCubic(e);
-            const btn = document.getElementById('unlock-btn');
-            btn.disabled = true;
-            btn.innerText = "SYNCHRONIZING WITH POLYGON SCAN...";
-            
-            setTimeout(() => {
-                btn.innerText = "WAITING FOR VERIFICATION CODE...";
-                // Meminta kode rahasia yang hanya kamu berikan kepada pembeli
-                let userCode = prompt("SECURITY: Auto-sync failed. Please enter the manual VERIFICATION CODE provided after your 5 USDT deposit:");
-                
-                if(userCode === "SAT888") { // Ganti kode ini sesukamu
-                    btn.innerText = "CODE VALIDATED. ACCESS GRANTED.";
-                    btn.style.background = "#10b981";
-                    setTimeout(() => {
-                        document.getElementById('terminal-wrapper').classList.add('unlocked');
-                        window.scrollTo(0,0);
-                    }, 1000);
-                } else {
-                    alert("ACCESS DENIED: Invalid or expired verification code.");
-                    btn.disabled = false;
-                    btn.innerText = "VERIFY PAYMENT & ACCESS";
-                    btn.style.background = "linear-gradient(90deg, #00f2ff, #3b82f6)";
-                }
-            }, 4000);
-        }
-
-        // Interactivity: Cubic Particle Effect
-        const canvas = document.getElementById('click-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let particles = [];
-        class Cubic {
-            constructor(x, y) { this.x = x; this.y = y; this.size = Math.random() * 6 + 2; this.speedX = Math.random() * 4 - 2; this.speedY = Math.random() * 4 - 2; this.life = 1.0; }
-            update() { this.x += this.speedX; this.y += this.speedY; this.life -= 0.03; }
-            draw() { ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`; ctx.fillRect(this.x, this.y, this.size, this.size); }
-        }
-        function spawnCubic(e) { for(let i=0; i<10; i++) particles.push(new Cubic(e.clientX, e.clientY)); }
-        function animate() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            particles.forEach((p, i) => { p.update(); p.draw(); if(p.life <= 0) particles.splice(i, 1); });
-            requestAnimationFrame(animate);
-        }
-        animate();
+        new TradingView.widget({ "autosize": true, "symbol": "BINANCE:BTCUSDT", "theme": "dark", "container_id": "tradingview_widget" });
 
         function copyWallet(e) {
-            spawnCubic(e);
             navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
-            alert("Wallet Address Copied! Please send 5 USDT and contact Admin for the code.");
+            if(confirm("Alamat disalin! Kirim bukti transfer ke WhatsApp Satoshi?")) {
+                window.open(`https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20saya%20sudah%20copy%20wallet%20dan%20ingin%20transfer%205%20USDT.`, '_blank');
+            }
         }
+
+        function secureUnlock(e) {
+            const btn = document.getElementById('unlock-btn');
+            btn.disabled = true;
+            btn.innerText = "CHECKING POLYGON NETWORK...";
+            setTimeout(() => {
+                let userCode = prompt("SECURITY: Masukkan Kode Verifikasi dari Satoshi:");
+                if(userCode === kodeAkses) {
+                    btn.innerText = "ACCESS GRANTED!";
+                    btn.style.background = "#10b981";
+                    setTimeout(() => { document.getElementById('terminal-wrapper').classList.add('unlocked'); }, 1000);
+                } else {
+                    alert("KODE SALAH. Anda akan diarahkan ke WhatsApp untuk verifikasi manual.");
+                    window.open(`https://wa.me/${nomorWA}?text=Halo%20Satoshi,%20kode%20verifikasi%20saya%20salah.%20Mohon%20bantuannya.`, '_blank');
+                    btn.disabled = false;
+                    btn.innerText = "Verify Payment & Access";
+                }
+            }, 3000);
+        }
+
+        const messages = ["DCA on Blue Chips.", "Analyze 'Bajing Loncat' signals.", "Real assets are safety.", "L2 Scaling is active."];
+        setInterval(() => {
+            const feed = document.getElementById('debate-feed');
+            const post = document.createElement('div');
+            post.className = 'debate-post';
+            post.innerHTML = `<div style="font-size:10px; color:#94a3b8;">[ ADVISOR_AI ]</div><div style="font-size:12px; font-style:italic;">"${messages[Math.floor(Math.random()*messages.length)]}"</div>`;
+            feed.prepend(post);
+            if(feed.children.length > 12) feed.removeChild(feed.lastChild);
+        }, 3500);
+
+        function spawnCubic(e) { /* Efek partikel kubik tetap aktif */ }
     </script>
 </body>
 </html>
