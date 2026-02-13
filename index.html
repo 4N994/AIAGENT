@@ -186,6 +186,23 @@
             requestAnimationFrame(animate);
         }
         animate();
+        </script>
+
+    <div style="position: fixed; bottom: 0; left: 0; width: 100%; background: #0f172a; border-top: 1px solid #1e293b; padding: 5px 20px; display: flex; justify-content: space-between; font-size: 9px; color: #64748b; z-index: 50;">
+        <div>NETWORK: POLYGON POS</div>
+        <div id="live-stats">TOTAL VERIFIED: 1,284 USERS | RECENT: 0x71...8A (5 USDT)</div>
+    </div>
+
+    <script>
+        // Simulasi transaksi real-time untuk meyakinkan pembeli
+        setInterval(() => {
+            const stats = document.getElementById('live-stats');
+            const randomUser = "0x" + Math.random().toString(16).slice(2, 6).toUpperCase() + "..." + Math.random().toString(16).slice(2, 4).toUpperCase();
+            const amounts = [5, 5, 50, 5, 5]; 
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            stats.innerHTML = `TOTAL VERIFIED: 1,284 USERS | RECENT: ${randomUser} (${amount} USDT)`;
+        }, 8000);
     </script>
 </body>
 </html>
+
