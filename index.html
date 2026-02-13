@@ -3,51 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIAGENT | SYSTEM SELECTION v5.0</title>
+    <title>AIAGENT | INTERACTIVE TERMINAL v5.5</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <style>
         * { -webkit-user-select: none; user-select: none; box-sizing: border-box; }
-        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 10px; text-align: center; overflow-x: hidden; }
-        .container { max-width: 900px; margin: 20px auto; border: 1px solid #00f2ff; background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); position: relative; }
+        body { background: #020617; color: #ffffff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; overflow: hidden; }
         
-        /* SOLO LEVELING CUBIC LOGO */
-        .logo-container { position: relative; display: inline-block; margin-bottom: 20px; }
-        .logo-agent { width: 110px; height: 110px; border-radius: 50%; border: 2px solid #00f2ff; z-index: 2; position: relative; background: #000; cursor: pointer; }
-        #cubic-canvas { position: absolute; top: -45px; left: -45px; width: 200px; height: 200px; z-index: 1; pointer-events: none; }
+        /* FULL SCREEN CLICK EFFECT CANVAS */
+        #click-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
 
+        .container { max-width: 900px; margin: 20px auto; border: 1px solid #00f2ff; background: rgba(15, 23, 42, 0.95); padding: 25px; border-radius: 25px; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); backdrop-filter: blur(20px); position: relative; z-index: 10; }
+        
+        .logo-agent { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #00f2ff; background: #000; margin-bottom: 20px; box-shadow: 0 0 15px #00f2ff; }
         h1 { color: #00f2ff; letter-spacing: 4px; margin: 0; font-weight: 800; text-transform: uppercase; }
         .status { color: #10b981; font-weight: bold; font-size: 0.75em; margin-bottom: 20px; letter-spacing: 1px; }
 
-        /* TABS & CHARTS */
         .tab-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
-        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; }
-        .tab-btn.active { background: #00f2ff; color: #020617; border-color: #00f2ff; box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
-        .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 450px; margin-bottom: 20px; }
+        .tab-btn { background: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 12px 18px; border-radius: 10px; cursor: pointer; font-size: 11px; font-weight: bold; transition: 0.3s; position: relative; overflow: hidden; }
+        .tab-btn.active { background: #00f2ff; color: #020617; box-shadow: 0 0 20px rgba(0, 242, 255, 0.5); }
+        
+        .widget-section { background: #000; border-radius: 15px; border: 1px solid #1e293b; overflow: hidden; height: 400px; margin-bottom: 20px; }
 
-        /* INPUTS */
-        .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .terminal-input { width: 100%; background: #020617; border: 1px solid #1e293b; color: #00f2ff; padding: 12px; border-radius: 8px; text-align: center; font-family: monospace; font-size: 11px; }
-
-        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; transition: 0.3s; }
-        .access-box:hover { background: rgba(0, 242, 255, 0.08); }
-        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; }
+        .access-box { border: 2px dashed #00f2ff; padding: 25px; border-radius: 20px; margin: 20px 0; background: rgba(0, 242, 255, 0.03); cursor: pointer; position: relative; }
+        .btn-action { background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%); color: white; border: none; padding: 20px; border-radius: 50px; font-weight: 900; width: 100%; cursor: pointer; letter-spacing: 2px; position: relative; }
 
         #secret-area { display: none; margin-top: 30px; border-top: 1px solid #334155; padding-top: 25px; text-align: left; }
-        .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 14px; line-height: 1.6; }
-        .footer-note { color: #475569; font-size: 10px; margin-top: 25px; font-style: italic; letter-spacing: 1px; }
+        .memo-card { background: #0f172a; padding: 15px; border-radius: 12px; border-left: 4px solid #00f2ff; margin-bottom: 12px; font-size: 13px; }
     </style>
 </head>
-<body>
+<body onclick="spawnCubic(event)">
+
+    <canvas id="click-canvas"></canvas>
 
     <div class="container">
-        <div class="logo-container">
-            <canvas id="cubic-canvas"></canvas>
-            <img src="logo-aiagent-cubic.png" alt="AGENT" class="logo-agent">
-        </div>
+        <img src="logo-aiagent-cubic.png" alt="AGENT" class="logo-agent">
         <h1>AIAGENT HUB</h1>
-        <p class="status">● GLOBAL TERMINAL: SYSTEM ACTIVE</p>
+        <p class="status">● GLOBAL TERMINAL: ACTIVE INTERACTION MODE</p>
 
-        <div id="terminal-view">
+        <div id="main-view">
             <div class="tab-container">
                 <button class="tab-btn active" onclick="changeChart('BINANCE:BTCUSDT', this)">CRYPTO</button>
                 <button class="tab-btn" onclick="changeChart('OANDA:XAUUSD', this)">GOLD (XAU)</button>
@@ -57,81 +50,84 @@
 
             <div class="widget-section" id="chart-container"></div>
 
-            <div class="input-grid">
-                <input type="text" class="terminal-input" placeholder="BTC TARGET: 0.0001" readonly>
-                <input type="text" class="terminal-input" placeholder="STOCK: BBCA" readonly>
-                <input type="text" class="terminal-input" placeholder="ASSET: REAL ESTATE" readonly>
-            </div>
-
-            <div class="access-box" onclick="copyAddr()">
+            <div class="access-box" onclick="copyAddr(event)">
                 <p style="color:#00f2ff; font-weight:bold; margin:0; font-size: 14px;">UNLOCK WHALE INSIGHTS: 5 USDT</p>
-                <code id="wallet" style="color: #f0b90b; font-size: 0.8em; display: block; margin-top: 5px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
-                <span style="font-size: 9px; color: #64748b;">(Click to copy Polygon address)</span>
+                <code style="color: #f0b90b; font-size: 0.8em; display: block; margin-top: 5px;">0xf62f4b6eabc088a7263139e46878b12cb15ed86f</code>
+                <small style="font-size: 9px; color: #64748b;">(Click box to copy address)</small>
             </div>
             
-            <button onclick="unlockSystem()" class="btn-action" id="action-btn">VERIFY IDENTITY</button>
-            
-            <p class="footer-note">"System detects Maxwell & Epstein traces. BTC is not just code. Transition to real assets initiated."</p>
+            <button onclick="unlock(event)" class="btn-action" id="action-btn">VERIFY IDENTITY</button>
         </div>
 
         <div id="secret-area">
-            <h2 style="color: #00f2ff; text-align: center; letter-spacing: 2px;">🔓 THE PEOPLE'S MEMOIR</h2>
-            <div class="memo-card"><strong>1. Core Portfolio (80-90%):</strong> Accumulate Blue Chips & BTC via DCA for long-term growth and stable dividends. [cite: 2025-07-30]</div>
-            <div class="memo-card"><strong>2. Capital Acceleration (10-20%):</strong> Apply "Jumping Squirrel" strategy on small-cap Altcoins. Secure profits immediately to Trust Wallet. [cite: 2025-07-30]</div>
-            <div class="memo-card"><strong>3. Final Exit:</strong> Total conversion to Real Assets, Government Bonds, and Livestock. [cite: 2026-01-20]</div>
-            <p style="text-align: center; font-size: 11px; color: #64748b;">"This is the time for the people to party." - The Next Satoshi [cite: 2025-12-29, 2026-01-01]</p>
+            <h2 style="color: #00f2ff; text-align: center;">🔓 THE PEOPLE'S PARTY</h2>
+            <div class="memo-card"><strong>Core Portfolio (80-90%):</strong> Accumulate Blue Chips & BTC.</div>
+            <div class="memo-card"><strong>Acceleration (10-20%):</strong> Quick profit cycles on Altcoins.</div>
+            <div class="memo-card"><strong>Exit Plan:</strong> Shift to Government Bonds & Real Assets.</div>
+            <p style="text-align: center; font-size: 11px; color: #64748b;">"Time for the people to party." - The Next Satoshi</p>
         </div>
     </div>
 
     <script src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        function loadChart(symbol) {
-            new TradingView.widget({
-                "autosize": true, "symbol": symbol, "interval": "D", "theme": "dark",
-                "container_id": "chart-container", "locale": "en", "allow_symbol_change": true
-            });
-        }
-        function changeChart(symbol, btn) {
-            loadChart(symbol);
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-        }
+        function loadChart(s) { new TradingView.widget({"autosize": true, "symbol": s, "interval": "D", "theme": "dark", "container_id": "chart-container", "locale": "en"}); }
+        function changeChart(s, b) { loadChart(s); document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active')); b.classList.add('active'); }
         loadChart('BINANCE:BTCUSDT');
 
-        // CUBIC PARTICLES (SOLO LEVELING STYLE)
-        const canvas = document.getElementById('cubic-canvas');
+        // MULTI-TARGET CUBIC EFFECT ENGINE
+        const canvas = document.getElementById('click-canvas');
         const ctx = canvas.getContext('2d');
-        canvas.width = 200; canvas.height = 200;
-        let pArray = [];
-        class Particle {
-            constructor() {
-                this.x = 100; this.y = 100;
-                this.size = Math.random() * 5 + 2;
-                this.speedX = Math.random() * 3 - 1.5;
-                this.speedY = Math.random() * 3 - 1.5;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particles = [];
+
+        class Cubic {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 8 + 4;
+                this.speedX = Math.random() * 6 - 3;
+                this.speedY = Math.random() * 6 - 3;
+                this.life = 1.0;
             }
-            update() { this.x += this.speedX; this.y += this.speedY; if (this.size > 0.1) this.size -= 0.1; }
-            draw() { ctx.fillStyle = '#00f2ff'; ctx.fillRect(this.x, this.y, this.size, this.size); }
-        }
-        function handleParticles() {
-            pArray.push(new Particle());
-            for (let i = 0; i < pArray.length; i++) {
-                pArray[i].update(); pArray[i].draw();
-                if (pArray[i].size <= 0.1) { pArray.splice(i, 1); i--; }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                this.life -= 0.02;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(0, 242, 255, ${this.life})`;
+                ctx.fillRect(this.x, this.y, this.size, this.size);
             }
         }
-        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); handleParticles(); requestAnimationFrame(animate); }
+
+        function spawnCubic(e) {
+            for(let i=0; i<15; i++) {
+                particles.push(new Cubic(e.clientX, e.clientY));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(); particles[i].draw();
+                if (particles[i].life <= 0) { particles.splice(i, 1); i--; }
+            }
+            requestAnimationFrame(animate);
+        }
         animate();
 
-        async function unlockSystem() {
-            document.getElementById('action-btn').innerText = "SCANNING EPSTEIN FILES...";
-            setTimeout(() => {
-                document.getElementById('terminal-view').style.display = 'none';
-                document.getElementById('secret-area').style.display = 'block';
-                window.scrollTo(0,0);
-            }, 2500);
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        function unlock(e) {
+            spawnCubic(e); // Trigger effect on button click
+            document.getElementById('action-btn').innerText = "SYNCHRONIZING...";
+            setTimeout(() => { 
+                document.getElementById('main-view').style.display = 'none'; 
+                document.getElementById('secret-area').style.display = 'block'; 
+            }, 1500);
         }
-        function copyAddr() {
+
+        function copyAddr(e) {
+            spawnCubic(e); // Trigger effect on copy click
             navigator.clipboard.writeText("0xf62f4b6eabc088a7263139e46878b12cb15ed86f");
             alert("Address Copied!");
         }
